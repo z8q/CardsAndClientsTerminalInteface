@@ -1,0 +1,6 @@
+Card{cardNumberFirstFourDigits='7685', cardNumberSecondEightDigits='99994444', cardNumberThirdFourDigits='8818', formFactor=REAL, hasAChip=true, pinCode=5436}
+Card{cardNumberFirstFourDigits='9699', cardNumberSecondEightDigits='88886666', cardNumberThirdFourDigits='7137', formFactor=REAL, hasAChip=false, pinCode=6543}
+Card{cardNumberFirstFourDigits='1235', cardNumberSecondEightDigits='22223333', cardNumberThirdFourDigits='7687', formFactor=REAL, hasAChip=true, pinCode=5478}
+Card{cardNumberFirstFourDigits='1234', cardNumberSecondEightDigits='22223333', cardNumberThirdFourDigits='2464', formFactor=REAL, hasAChip=true, pinCode=1234}
+Card{cardNumberFirstFourDigits='2722', cardNumberSecondEightDigits='33331111', cardNumberThirdFourDigits='6369', formFactor=REAL, hasAChip=true, pinCode=5344}
+Card{cardNumberFirstFourDigits='5555', cardNumberSecondEightDigits='66667777', cardNumberThirdFourDigits='2373', formFactor=REAL, hasAChip=false, pinCode=5533}

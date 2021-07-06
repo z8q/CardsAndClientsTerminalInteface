@@ -11,3 +11,5 @@
 /CardsAndClientsTerminalInteface.iml
 *.DS_Store
 ._*
+/CardList.txt
+/ClientList.txt
