@@ -80,8 +80,6 @@ public class MenuLevels {
                 .withPinCode(Integer.parseInt(pinInput))
                 .build();
 
-//        Gson gson = new Gson();
-//        String jsonRepresentation = gson.toJson(card);
         infoWriter.writeCardInfo(card);
     }
 
@@ -124,8 +122,7 @@ public class MenuLevels {
                                     .withBirthDate(date)
                                     .withClientCards(Collections.emptyList())
                                     .build();
-        Gson gson = new Gson();
-        String jsonRepresentation = gson.toJson(client);
+
         infoWriter.writeClientInfo(client);
     }
 

@@ -77,11 +77,7 @@ public class InfoWriter {
             Gson gsonCards = new Gson();
             List<Client> clientArray = gsonCards.fromJson(contentClients, ArrayList.class);
             if (clientArray != null) {
-                //clientArray.removeIf(human -> client.getId().intValue() == human.getId().intValue());
-
                 clientArray.set((client.getId().intValue()-1), client);
-
-                //clientArray.add(client);
                 String contentClientsNew = gsonCards.toJson(clientArray);
                 BufferedWriter writer = new BufferedWriter(new FileWriter(path));
                 writer.write(contentClientsNew);

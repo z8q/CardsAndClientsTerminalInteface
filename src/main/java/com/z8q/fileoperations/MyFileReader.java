@@ -5,6 +5,7 @@ import com.z8q.dto.Card;
 import com.z8q.dto.Client;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -17,24 +18,26 @@ public class MyFileReader {
 
 
     public void printCardList() {
-
         try {
             String content = Files.lines(Paths.get("src/main/resources/CardList.txt")).reduce("", String::concat);
             Gson gson = new Gson();
-            Client[] client = gson.fromJson(content, Client[].class);
-            System.out.println(gson.toJson(client));
+            List<Card> printCardList = gson.fromJson(content, ArrayList.class);
+            for (int i = 0; i < printCardList.size(); i++) {
+                System.out.println(printCardList.get(i));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-
     public void printClientList() {
         try {
             String content = Files.lines(Paths.get("src/main/resources/ClientList.txt")).reduce("", String::concat);
             Gson gson = new Gson();
-            Client[] client = gson.fromJson(content, Client[].class);
-            System.out.println(gson.toJson(client));
+            List<Client> printClientList = gson.fromJson(content, ArrayList.class);
+            for (int i = 0; i < printClientList.size(); i++) {
+                System.out.println(printClientList.get(i));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -47,8 +50,6 @@ public class MyFileReader {
         String clientId = sc.nextLine();
 
         addCardToClient(idCardNumber, clientId);
-
-
     }
 
     public static void addCardToClient(String idCardNumber, String clientId) {
@@ -56,16 +57,12 @@ public class MyFileReader {
             String content = Files.lines(Paths.get("src/main/resources/ClientList.txt")).reduce("", String::concat);
             Gson gsonClients = new Gson();
             Client[] clientArray = gsonClients.fromJson(content, Client[].class);
-            //List<Client> clientArray = gsonClients.fromJson(content, ArrayList.class);
-
 
             String contentCards = Files.lines(Paths.get("src/main/resources/CardList.txt")).reduce("", String::concat);
             Gson gsonCards = new Gson();
             Card[] cardArray = gsonCards.fromJson(contentCards, Card[].class);
-            //List<Card> cardArray = gsonCards.fromJson(contentCards, ArrayList.class);
 
             List<Card> listOfCards = clientArray[Integer.parseInt(clientId)-1].getClientCards();
-            //List<Card> listOfCards = clientArray.get(Integer.parseInt(clientId)-1).getClientCards();
 
                 for (Card card : cardArray) {
                     if (card.getId().intValue() == (Integer.parseInt(idCardNumber))) {
@@ -80,7 +77,6 @@ public class MyFileReader {
                                 .withClientCards(listOfCards)
                                 .build();
 
-                        String jsonClient = gsonClients.toJson(clientAddElementToList);
                         InfoWriter infoWriter = new InfoWriter();
                         infoWriter.writeUpdatedClientInfo(clientAddElementToList);
                     }
