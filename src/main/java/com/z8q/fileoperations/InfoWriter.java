@@ -36,37 +36,66 @@ public class InfoWriter {
                 writer.write(humansString);
                 writer.close();
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-        //appendUsingFileWriter(path, json + "\n");
     }
 
-    public void writeClientInfo(String json) {
+    public void writeClientInfo(Client client) {
 
         String path = "src/main/resources/ClientList.txt";
-        appendUsingFileWriter(path, json + "\n");
-    }
 
-    private static void appendUsingFileWriter(String filePath, String text) {
-        File file = new File(filePath);
-        FileWriter fr = null;
         try {
-            fr = new FileWriter(file,true);
-            fr.write(text);
-
+            String contentClients = Files.lines(Paths.get(path)).reduce("", String::concat);
+            Gson gsonCards = new Gson();
+            List<Client> clientArray = gsonCards.fromJson(contentClients, ArrayList.class);
+            if (clientArray != null) {
+                clientArray.add(client);
+                String contentClientsNew = gsonCards.toJson(clientArray);
+                BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+                writer.write(contentClientsNew);
+                writer.close();
+            } else {
+                List<Client> tempClientArray = new ArrayList<>();
+                tempClientArray.add(client);
+                String humansString = gsonCards.toJson(tempClientArray);
+                BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+                writer.write(humansString);
+                writer.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
-        }finally{
-            try {
-                assert fr != null;
-                fr.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+        }
+    }
+
+    public void writeUpdatedClientInfo(Client client) {
+
+        String path = "src/main/resources/ClientList.txt";
+
+        try {
+            String contentClients = Files.lines(Paths.get(path)).reduce("", String::concat);
+            Gson gsonCards = new Gson();
+            List<Client> clientArray = gsonCards.fromJson(contentClients, ArrayList.class);
+            if (clientArray != null) {
+                //clientArray.removeIf(human -> client.getId().intValue() == human.getId().intValue());
+
+                clientArray.set((client.getId().intValue()-1), client);
+
+                //clientArray.add(client);
+                String contentClientsNew = gsonCards.toJson(clientArray);
+                BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+                writer.write(contentClientsNew);
+                writer.close();
+            } else {
+                List<Client> tempClientArray = new ArrayList<>();
+                tempClientArray.add(client);
+                String humansString = gsonCards.toJson(tempClientArray);
+                BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+                writer.write(humansString);
+                writer.close();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

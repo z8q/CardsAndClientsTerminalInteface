@@ -21,7 +21,8 @@ public class MenuLevels {
 
     InfoWriter infoWriter = new InfoWriter();
 
-    private static Long id = 0L;
+    private static Long cardId = 0L;
+    private static Long clientId = 0L;
 
     public void mainMenu() {
         System.out.println("Главное меню");
@@ -61,16 +62,16 @@ public class MenuLevels {
             Gson gsonCards = new Gson();
             List<Card> cardArray = gsonCards.fromJson(contentCards, ArrayList.class);
             if (cardArray == null) {
-                id = 1L;
+                cardId = 1L;
             } else {
-                id = (long) (cardArray.size() + 1);
+                cardId = (long) (cardArray.size() + 1);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         Card card = new Card.Builder()
-                .withId(id)
+                .withId(cardId)
                 .withCardNumberFirstFourDigits(cardNumber16DigitsInput.substring(0, 4))
                 .withCardNumberSecondEightDigits(cardNumber16DigitsInput.substring(4, 12))
                 .withCardNumberThirdFourDigits(cardNumber16DigitsInput.substring(12, 16))
@@ -101,8 +102,22 @@ public class MenuLevels {
             e.printStackTrace();
         }
 
+        try {
+            String path = "src/main/resources/ClientList.txt";
+            String contentClients = Files.lines(Paths.get(path)).reduce("", String::concat);
+            Gson gsonClients = new Gson();
+            List<Client> clientArray = gsonClients.fromJson(contentClients, ArrayList.class);
+            if (clientArray == null) {
+                clientId = 1L;
+            } else {
+                clientId = (long) (clientArray.size() + 1);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         Client client = new Client.Builder()
-                                    .withId(++id)
+                                    .withId(clientId)
                                     .withLastName(lastnameInput)
                                     .withFirstName(firstnameInput)
                                     .withMiddleName(middlenameInput)
@@ -111,7 +126,7 @@ public class MenuLevels {
                                     .build();
         Gson gson = new Gson();
         String jsonRepresentation = gson.toJson(client);
-        infoWriter.writeClientInfo(jsonRepresentation);
+        infoWriter.writeClientInfo(client);
     }
 
     public void secondMenu() {
