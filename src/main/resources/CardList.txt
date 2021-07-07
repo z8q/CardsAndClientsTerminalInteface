@@ -1,4 +1,5 @@
-Card{id=1, cardNumberFirstFourDigits='4312', cardNumberSecondEightDigits='55556666', cardNumberThirdFourDigits='7777', formFactor=VIRTUAL, hasAChip=false, pinCode=4343}
-Card{id=1, cardNumberFirstFourDigits='3333', cardNumberSecondEightDigits='99995555', cardNumberThirdFourDigits='4444', formFactor=REAL, hasAChip=true, pinCode=6666}
-Card{id=1, cardNumberFirstFourDigits='4322', cardNumberSecondEightDigits='66664444', cardNumberThirdFourDigits='7777', formFactor=REAL, hasAChip=true, pinCode=5555}
-Card{id=2, cardNumberFirstFourDigits='5433', cardNumberSecondEightDigits='99990000', cardNumberThirdFourDigits='9999', formFactor=VIRTUAL, hasAChip=true, pinCode=5555}
+[
+{"id":1,"cardNumberFirstFourDigits":"8888","cardNumberSecondEightDigits":"77776666","cardNumberThirdFourDigits":"5555","formFactor":"REAL","hasAChip":false,"pinCode":5432},
+{"id":2,"cardNumberFirstFourDigits":"9898","cardNumberSecondEightDigits":"76765454","cardNumberThirdFourDigits":"3232","formFactor":"VIRTUAL","hasAChip":false,"pinCode":1111},
+{"id":3,"cardNumberFirstFourDigits":"1234","cardNumberSecondEightDigits":"12341234","cardNumberThirdFourDigits":"3333","formFactor":"REAL","hasAChip":true,"pinCode":2222}
+]

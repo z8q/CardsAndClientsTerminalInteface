@@ -1,5 +1,6 @@
 package com.z8q.menu;
 
+import com.google.gson.Gson;
 import com.z8q.cardpropeties.FormFactor;
 import com.z8q.dto.Card;
 import com.z8q.dto.Client;
@@ -8,9 +9,7 @@ import com.z8q.fileoperations.MyFileReader;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class MenuLevels {
@@ -63,10 +62,9 @@ public class MenuLevels {
                 .withPinCode(Integer.parseInt(pinInput))
                 .build();
 
-        Client client = new Client();
-        client.addToClientCards(card);
-        infoWriter.writeCardInfo(card);
-        System.out.println(client.getClientCards());
+        Gson gson = new Gson();
+        String jsonRepresentation = gson.toJson(card);
+        infoWriter.writeCardInfo(jsonRepresentation);
     }
 
     public void addClient() {
@@ -94,8 +92,9 @@ public class MenuLevels {
                                     .withBirthDate(date)
                                     .withClientCards(Collections.emptyList())
                                     .build();
-
-        infoWriter.writeClientInfo(client);
+        Gson gson = new Gson();
+        String jsonRepresentation = gson.toJson(client);
+        infoWriter.writeClientInfo(jsonRepresentation);
     }
 
     public void secondMenu() {
@@ -129,7 +128,7 @@ public class MenuLevels {
                 }
                 break;
             case "3":
-                myFileReader.linkCardToClient();
+                myFileReader.linkCardToClientMenu();
                 break;
         }
     }
