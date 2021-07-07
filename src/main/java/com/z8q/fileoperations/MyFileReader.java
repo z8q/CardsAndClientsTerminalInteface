@@ -7,6 +7,7 @@ import com.z8q.dto.Client;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -54,25 +55,29 @@ public class MyFileReader {
         try {
             String content = Files.lines(Paths.get("src/main/resources/ClientList.txt")).reduce("", String::concat);
             Gson gson = new Gson();
-            Client[] clientArray = gson.fromJson(content, Client[].class);
+            //Client[] clientArray = gson.fromJson(content, Client[].class);
+            List<Client> clientArray = gson.fromJson(content, ArrayList.class);
+
 
             String contentCards = Files.lines(Paths.get("src/main/resources/CardList.txt")).reduce("", String::concat);
             Gson gsonCards = new Gson();
-            Card[] cardArray = gsonCards.fromJson(contentCards, Card[].class);
+            //Card[] cardArray = gsonCards.fromJson(contentCards, Card[].class);
+            List<Card> cardArray = gsonCards.fromJson(contentCards, ArrayList.class);
 
-            List<Card> list = clientArray[Integer.parseInt(clientId)-1].getClientCards();
+            //List<Card> list = clientArray[Integer.parseInt(clientId)-1].getClientCards();
+            List<Card> listOfCards = clientArray.get(Integer.parseInt(clientId)-1).getClientCards();
 
                 for (Card card : cardArray) {
                     if (card.getId().intValue() == (Integer.parseInt(idCardNumber))) {
-                        list.add(cardArray[Integer.parseInt(idCardNumber) - 1]);
+                        listOfCards.add(cardArray.get(Integer.parseInt(idCardNumber) - 1));
 
                         Client clientAddElementToList = new Client.Builder()
-                                .withId(clientArray[Integer.parseInt(clientId)-1].getId())
-                                .withLastName(clientArray[Integer.parseInt(clientId)-1].getLastName())
-                                .withFirstName(clientArray[Integer.parseInt(clientId)-1].getFirstName())
-                                .withMiddleName(clientArray[Integer.parseInt(clientId)-1].getMiddleName())
-                                .withBirthDate(clientArray[Integer.parseInt(clientId)-1].getBirthDate())
-                                .withClientCards(list)
+                                .withId(clientArray.get(Integer.parseInt(clientId)-1).getId())
+                                .withLastName(clientArray.get(Integer.parseInt(clientId)-1).getLastName())
+                                .withFirstName(clientArray.get(Integer.parseInt(clientId)-1).getFirstName())
+                                .withMiddleName(clientArray.get(Integer.parseInt(clientId)-1).getMiddleName())
+                                .withBirthDate(clientArray.get(Integer.parseInt(clientId)-1).getBirthDate())
+                                .withClientCards(listOfCards)
                                 .build();
 
                         String jsonClient = gson.toJson(clientAddElementToList);

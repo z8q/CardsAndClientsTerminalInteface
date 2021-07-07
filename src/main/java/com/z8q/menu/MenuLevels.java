@@ -7,6 +7,9 @@ import com.z8q.dto.Client;
 import com.z8q.fileoperations.InfoWriter;
 import com.z8q.fileoperations.MyFileReader;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -52,8 +55,22 @@ public class MenuLevels {
         System.out.println("Введите пин-код - 4 цифры");
         String pinInput = sc.nextLine();
 
+        try {
+            String path = "src/main/resources/CardList.txt";
+            String contentCards = Files.lines(Paths.get(path)).reduce("", String::concat);
+            Gson gsonCards = new Gson();
+            List<Card> cardArray = gsonCards.fromJson(contentCards, ArrayList.class);
+            if (cardArray == null) {
+                id = 1L;
+            } else {
+                id = (long) (cardArray.size() + 1);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         Card card = new Card.Builder()
-                .withId(++id)
+                .withId(id)
                 .withCardNumberFirstFourDigits(cardNumber16DigitsInput.substring(0, 4))
                 .withCardNumberSecondEightDigits(cardNumber16DigitsInput.substring(4, 12))
                 .withCardNumberThirdFourDigits(cardNumber16DigitsInput.substring(12, 16))
@@ -62,9 +79,9 @@ public class MenuLevels {
                 .withPinCode(Integer.parseInt(pinInput))
                 .build();
 
-        Gson gson = new Gson();
-        String jsonRepresentation = gson.toJson(card);
-        infoWriter.writeCardInfo(jsonRepresentation);
+//        Gson gson = new Gson();
+//        String jsonRepresentation = gson.toJson(card);
+        infoWriter.writeCardInfo(card);
     }
 
     public void addClient() {
