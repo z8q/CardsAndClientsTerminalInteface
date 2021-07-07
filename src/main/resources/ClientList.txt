@@ -1,0 +1,1 @@
+Client{id=1, lastName='r', firstName='e', middleName='w', birthDate=31/12/1986, clientCards=[]}

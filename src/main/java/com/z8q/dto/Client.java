@@ -2,34 +2,23 @@ package com.z8q.dto;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class Client {
 
+    private Long id;
     private String lastName;
     private String firstName;
     private String middleName;
-
-    private Calendar birthDate;
+    private Date birthDate;
 
     private List<Card> clientCards = new ArrayList<>();
 
     public Client() {}
 
-    public Client(String lastName, String firstName, String middleName, Calendar birthDate) {
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.middleName = middleName;
-        this.birthDate = birthDate;
-    }
-
-    public Client(String lastName, String firstName, String middleName, Calendar birthDate, List<Card> clientCards) {
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.middleName = middleName;
-        this.birthDate = birthDate;
-        this.clientCards = clientCards;
+    public Long getId() {
+        return id;
     }
 
     public String getLastName() {
@@ -44,27 +33,63 @@ public class Client {
         return middleName;
     }
 
-    public Calendar getBirthDate() {
+    public Date getBirthDate() {
         return birthDate;
     }
 
     public List<Card> getClientCards() {
         return clientCards;
     }
+    //!!!!
     public void addToClientCards(Card card) {
         clientCards.add(card);
     }
 
     @Override
     public String toString() {
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        String y = df.format(getBirthDate().getTime());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         return "Client{" +
-                "lastName='" + lastName + '\'' +
+                "id=" + id +
+                ", lastName='" + lastName + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", middleName='" + middleName + '\'' +
-                ", birthDate=" + y +
+                ", birthDate=" + dateFormat.format(birthDate) +
                 ", clientCards=" + clientCards +
                 '}';
+    }
+
+    public static class Builder {
+        private final Client newClient;
+
+        public Builder() {
+            newClient = new Client();
+        }
+        public Builder withId(Long id) {
+            newClient.id = id;
+            return this;
+        }
+        public Builder withLastName(String lastName) {
+            newClient.lastName = lastName;
+            return this;
+        }
+        public Builder withFirstName(String firstName) {
+            newClient.firstName = firstName;
+            return this;
+        }
+        public Builder withMiddleName(String middleName) {
+            newClient.middleName = middleName;
+            return this;
+        }
+        public Builder withBirthDate(Date birthDate) {
+            newClient.birthDate = birthDate;
+            return this;
+        }
+        public Builder withClientCards(List<Card> clientCards) {
+            newClient.clientCards = clientCards;
+            return this;
+        }
+        public Client build() {
+            return newClient;
+        }
     }
 }

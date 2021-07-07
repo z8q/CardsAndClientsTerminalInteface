@@ -2,8 +2,11 @@ package com.z8q.dto;
 
 import com.z8q.cardpropeties.FormFactor;
 
+import java.util.Objects;
+
 public class Card {
 
+    private Long id;
     private String cardNumberFirstFourDigits;
     private String cardNumberSecondEightDigits;
     private String cardNumberThirdFourDigits;
@@ -12,13 +15,10 @@ public class Card {
     private boolean hasAChip;
     private int pinCode;
 
-    public Card(String cardNumberFirstFourDigits, String cardNumberSecondEightDigits, String cardNumberThirdFourDigits, FormFactor formFactor, boolean hasAChip, int pinCode) {
-        this.cardNumberFirstFourDigits = cardNumberFirstFourDigits;
-        this.cardNumberSecondEightDigits = cardNumberSecondEightDigits;
-        this.cardNumberThirdFourDigits = cardNumberThirdFourDigits;
-        this.formFactor = formFactor;
-        this.hasAChip = hasAChip;
-        this.pinCode = pinCode;
+    public Card(){}
+
+    public Long getId() {
+        return id;
     }
 
     public String getCardNumberFirstFourDigits() {
@@ -48,12 +48,65 @@ public class Card {
     @Override
     public String toString() {
         return "Card{" +
-                "cardNumberFirstFourDigits='" + cardNumberFirstFourDigits + '\'' +
+                "id=" + id +
+                ", cardNumberFirstFourDigits='" + cardNumberFirstFourDigits + '\'' +
                 ", cardNumberSecondEightDigits='" + cardNumberSecondEightDigits + '\'' +
                 ", cardNumberThirdFourDigits='" + cardNumberThirdFourDigits + '\'' +
                 ", formFactor=" + formFactor +
                 ", hasAChip=" + hasAChip +
                 ", pinCode=" + pinCode +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Card card = (Card) o;
+        return hasAChip == card.hasAChip && pinCode == card.pinCode && Objects.equals(id, card.id) && Objects.equals(cardNumberFirstFourDigits, card.cardNumberFirstFourDigits) && Objects.equals(cardNumberSecondEightDigits, card.cardNumberSecondEightDigits) && Objects.equals(cardNumberThirdFourDigits, card.cardNumberThirdFourDigits) && formFactor == card.formFactor;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, cardNumberFirstFourDigits, cardNumberSecondEightDigits, cardNumberThirdFourDigits, formFactor, hasAChip, pinCode);
+    }
+
+    public static class Builder {
+        private final Card newCard;
+
+        public Builder() {
+            newCard = new Card();
+        }
+        public Builder withId(Long id) {
+            newCard.id = id;
+            return this;
+        }
+        public Builder withCardNumberFirstFourDigits(String cardNumberFirstFourDigits) {
+            newCard.cardNumberFirstFourDigits = cardNumberFirstFourDigits;
+            return this;
+        }
+        public Builder withCardNumberSecondEightDigits(String cardNumberSecondEightDigits) {
+            newCard.cardNumberSecondEightDigits = cardNumberSecondEightDigits;
+            return this;
+        }
+        public Builder withCardNumberThirdFourDigits(String cardNumberThirdFourDigits) {
+            newCard.cardNumberThirdFourDigits = cardNumberThirdFourDigits;
+            return this;
+        }
+        public Builder withFormFactor(FormFactor formFactor) {
+            newCard.formFactor = formFactor;
+            return this;
+        }
+        public Builder withHasAChip(boolean hasAChip) {
+            newCard.hasAChip = hasAChip;
+            return this;
+        }
+        public Builder withPinCode(int pinCode) {
+            newCard.pinCode = pinCode;
+            return this;
+        }
+        public Card build() {
+            return newCard;
+        }
     }
 }

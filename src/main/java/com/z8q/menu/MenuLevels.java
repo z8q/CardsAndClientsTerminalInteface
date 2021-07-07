@@ -8,7 +8,7 @@ import com.z8q.fileoperations.MyFileReader;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -18,6 +18,8 @@ public class MenuLevels {
     private Scanner sc = new Scanner(System.in);
 
     InfoWriter infoWriter = new InfoWriter();
+
+    private static Long id = 0L;
 
     public void mainMenu() {
         System.out.println("Главное меню");
@@ -50,8 +52,17 @@ public class MenuLevels {
         }
         System.out.println("Введите пин-код - 4 цифры");
         String pinInput = sc.nextLine();
-        Card card = new Card(cardNumber16DigitsInput.substring(0, 4), cardNumber16DigitsInput.substring(4, 12), cardNumber16DigitsInput.substring(12, 16),
-                formFactor, x, Integer.parseInt(pinInput));
+
+        Card card = new Card.Builder()
+                .withId(++id)
+                .withCardNumberFirstFourDigits(cardNumber16DigitsInput.substring(0, 4))
+                .withCardNumberSecondEightDigits(cardNumber16DigitsInput.substring(4, 12))
+                .withCardNumberThirdFourDigits(cardNumber16DigitsInput.substring(12, 16))
+                .withFormFactor(formFactor)
+                .withHasAChip(x)
+                .withPinCode(Integer.parseInt(pinInput))
+                .build();
+
         Client client = new Client();
         client.addToClientCards(card);
         infoWriter.writeCardInfo(card);
@@ -60,7 +71,7 @@ public class MenuLevels {
 
     public void addClient() {
         System.out.println("Введите фамилию");
-        String surnameInput = sc.nextLine();
+        String lastnameInput = sc.nextLine();
         System.out.println("Введите имя");
         String firstnameInput = sc.nextLine();
         System.out.println("Введите отчество");
@@ -68,20 +79,21 @@ public class MenuLevels {
         System.out.println("Введите дату рождения - формат дд/мм/гггг");
         String birthDateInput = sc.nextLine();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Date date = null;
         try {
-            date = sdf.parse(birthDateInput);
+            date=new SimpleDateFormat("dd/MM/yyyy").parse(birthDateInput);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Calendar cal = Calendar.getInstance();
-        assert date != null;
-        cal.setTime(date);
 
-        System.out.println(cal);
-
-        Client client = new Client(surnameInput, firstnameInput, middlenameInput, cal);
+        Client client = new Client.Builder()
+                                    .withId(++id)
+                                    .withLastName(lastnameInput)
+                                    .withFirstName(firstnameInput)
+                                    .withMiddleName(middlenameInput)
+                                    .withBirthDate(date)
+                                    .withClientCards(Collections.emptyList())
+                                    .build();
 
         infoWriter.writeClientInfo(client);
     }
