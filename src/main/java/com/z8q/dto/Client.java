@@ -41,10 +41,6 @@ public class Client {
     public List<Card> getClientCards() {
         return clientCards;
     }
-    //!!!!
-    public void addToClientCards(Card card) {
-        clientCards.add(card);
-    }
 
     @Override
     public String toString() {
