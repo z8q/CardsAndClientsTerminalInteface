@@ -1,6 +1,7 @@
 package com.z8q.menu;
 
 import com.z8q.cardpropeties.FormFactor;
+import com.z8q.handler.MenuHandler;
 import com.z8q.service.CreateOperations;
 import com.z8q.service.ReadAndShowOperations;
 
@@ -13,6 +14,7 @@ public class MenuLevels {
 
     CreateOperations createOperations = new CreateOperations();
     ReadAndShowOperations readAndShowOperations = new ReadAndShowOperations();
+    MenuHandler menuHandler = new MenuHandler();
 
     public void startMenu() {
         while (true) {
@@ -65,7 +67,7 @@ public class MenuLevels {
         }
     }
 
-    public void mainMenu() {
+    public static void mainMenu() {
         System.out.println("Главное меню");
         System.out.println("-----------------------------------------");
         System.out.println("Введите номер пункта для перехода по меню");
@@ -82,38 +84,23 @@ public class MenuLevels {
         System.out.println("-----------------------------------------");
         System.out.println("0. Выйти из программы");
     }
-
+    //!!!!!!
     public void addCard() {
         System.out.println("Введите номер карты - 16 цифр");
         String cardNumber16DigitsInput = sc.nextLine();
-        while (cardNumber16DigitsInput.length() != 16) {
-            System.out.println("Повторите попытку, для выхода просто нажмите Enter");
-            cardNumber16DigitsInput = sc.nextLine();
-            if(cardNumber16DigitsInput.length()==0) {
-                mainMenu();
-            }
-        }
-        if(cardNumber16DigitsInput.length() != 16) {
-            System.out.println("Повторите попытку");
-        }
+        menuHandler.checkPAN(cardNumber16DigitsInput);
+
         System.out.println("Введите вид карты - REAL/VIRTUAL");
         String realOrVirtualInput = sc.nextLine();
-        FormFactor formFactor;
-        if (realOrVirtualInput.equals("REAL")) {
-            formFactor = FormFactor.REAL;
-        } else {
-            formFactor = FormFactor.VIRTUAL;
-        }
+        menuHandler.checkFormFactor(realOrVirtualInput);
+
         System.out.println("Добавить чип в карту? - yes/no");
         String hasAChipInput = sc.nextLine();
-        boolean x = false;
-        if (hasAChipInput.equals("yes")) {
-            x = true;
-        }
+        menuHandler.checkChip(hasAChipInput);
+
         System.out.println("Введите пин-код - 4 цифры");
         String pinInput = sc.nextLine();
-
-        createOperations.createCardObject(cardNumber16DigitsInput, formFactor, x, pinInput);
+        menuHandler.checkPin(pinInput);
     }
 
     public void addClient() {
@@ -179,7 +166,6 @@ public class MenuLevels {
         System.out.println("Введите номер id человека, к которому хотите привязать карту");
         String clientId = sc.nextLine();
 
-        CreateOperations createOperations = new CreateOperations();
         createOperations.createClientObjectWithUpdatedCardList(idCardNumber, clientId);
 
     }
