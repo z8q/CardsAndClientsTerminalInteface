@@ -13,7 +13,7 @@ public class Card {
 
     private FormFactor formFactor;
     private boolean hasAChip;
-    private int pinCode;
+    private String pinCode;
 
     public Card(){}
 
@@ -41,7 +41,7 @@ public class Card {
         return hasAChip;
     }
 
-    public int getPinCode() {
+    public String getPinCode() {
         return pinCode;
     }
 
@@ -101,7 +101,7 @@ public class Card {
             newCard.hasAChip = hasAChip;
             return this;
         }
-        public Builder withPinCode(int pinCode) {
+        public Builder withPinCode(String pinCode) {
             newCard.pinCode = pinCode;
             return this;
         }

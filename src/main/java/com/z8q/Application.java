@@ -28,6 +28,7 @@ public class Application {
                     break;
                 case "2":
                     menuLevels.addClient();
+                    break;
                 case "3":
                     menuLevels.secondMenu();
 

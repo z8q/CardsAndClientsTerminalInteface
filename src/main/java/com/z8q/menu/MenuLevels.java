@@ -77,7 +77,7 @@ public class MenuLevels {
                 .withCardNumberThirdFourDigits(cardNumber16DigitsInput.substring(12, 16))
                 .withFormFactor(formFactor)
                 .withHasAChip(x)
-                .withPinCode(Integer.parseInt(pinInput))
+                .withPinCode(pinInput)
                 .build();
 
         infoWriter.writeCardInfo(card);
