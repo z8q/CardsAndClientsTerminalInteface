@@ -1,0 +1,4 @@
+2021-07-08 15:14:23,213 WARN com.z8q.service.CreateOperations There is no client with id 123
+2021-07-08 15:14:51,825 WARN com.z8q.service.CreateOperations There is no client with id 123
+2021-07-08 15:15:07,696 WARN com.z8q.service.CreateOperations There is no client with id 123
+2021-07-08 15:18:14,090 WARN com.z8q.service.CreateOperations Error with arguments while linking Card to Client

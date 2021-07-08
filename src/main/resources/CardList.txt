@@ -1,0 +1,1 @@
+[{"id":1.0,"cardNumberFirstFourDigits":"2222","cardNumberSecondEightDigits":"33331111","cardNumberThirdFourDigits":"5555","formFactor":"REAL","hasAChip":true,"pinCode":"7777"},{"id":2,"cardNumberFirstFourDigits":"1231","cardNumberSecondEightDigits":"00009999","cardNumberThirdFourDigits":"8888","formFactor":"REAL","hasAChip":false,"pinCode":"7777"}]
