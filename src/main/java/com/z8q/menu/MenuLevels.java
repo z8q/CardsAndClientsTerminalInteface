@@ -12,6 +12,7 @@ public class MenuLevels {
     private Scanner sc = new Scanner(System.in);
 
     CreateOperations createOperations = new CreateOperations();
+    ReadAndShowOperations readAndShowOperations = new ReadAndShowOperations();
 
     public void startMenu() {
         while (true) {
@@ -21,7 +22,6 @@ public class MenuLevels {
             switch (choose) {
                 case "1":
                     addCard();
-                    System.out.println("Карта сохранена");
                     try {
                         TimeUnit.SECONDS.sleep(1);
                     } catch (InterruptedException e) {
@@ -33,8 +33,33 @@ public class MenuLevels {
                     break;
                 case "3":
                     secondMenu();
+                    break;
+                case "4":
+                    readAndShowOperations.showCardList();
+                    try {
+                        Thread.sleep(1800);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "5":
+                    readAndShowOperations.showClientList();
+                    try {
+                        Thread.sleep(1800);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    break;
                 case "0":
                     System.exit(0);
+                default:
+                    System.out.println("\nВыберите существующий пункт меню\n");
+                    try {
+                        Thread.sleep(1800);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    break;
             }
 
         }
@@ -51,12 +76,26 @@ public class MenuLevels {
         System.out.println("-----------------------------------------");
         System.out.println("3. Перейти в меню привязки карты к клиенту");
         System.out.println("-----------------------------------------");
+        System.out.println("4. Показать список карт");
+        System.out.println("-----------------------------------------");
+        System.out.println("5. Показать список клиентов");
+        System.out.println("-----------------------------------------");
         System.out.println("0. Выйти из программы");
     }
 
     public void addCard() {
         System.out.println("Введите номер карты - 16 цифр");
         String cardNumber16DigitsInput = sc.nextLine();
+        while (cardNumber16DigitsInput.length() != 16) {
+            System.out.println("Повторите попытку, для выхода просто нажмите Enter");
+            cardNumber16DigitsInput = sc.nextLine();
+            if(cardNumber16DigitsInput.length()==0) {
+                mainMenu();
+            }
+        }
+        if(cardNumber16DigitsInput.length() != 16) {
+            System.out.println("Повторите попытку");
+        }
         System.out.println("Введите вид карты - REAL/VIRTUAL");
         String realOrVirtualInput = sc.nextLine();
         FormFactor formFactor;
@@ -91,7 +130,6 @@ public class MenuLevels {
     }
 
     public void secondMenu() {
-        ReadAndShowOperations readAndShowOperations = new ReadAndShowOperations();
 
         System.out.println("Введите номер пункта для перехода по меню");
         System.out.println("-----------------------------------------");
@@ -100,8 +138,8 @@ public class MenuLevels {
         System.out.println("2. Показать список клиентов");
         System.out.println("-----------------------------------------");
         System.out.println("3. Привязать карту к клиенту");
-//        System.out.println("-----------------------------------------");
-//        System.out.println("4. Вернуться в основное меню");
+        System.out.println("-----------------------------------------");
+        System.out.println("4. Вернуться в основное меню");
         String chooseSecondMenu = sc.nextLine();
         switch (chooseSecondMenu) {
             case "1":
@@ -123,6 +161,16 @@ public class MenuLevels {
             case "3":
                 linkCardToClientMenu();
                 break;
+            case "4":
+                break;
+            default:
+                System.out.println("\nВыберите существующий пункт меню\n");
+                try {
+                    Thread.sleep(1800);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
     }
     public void linkCardToClientMenu() {
@@ -133,5 +181,26 @@ public class MenuLevels {
 
         CreateOperations createOperations = new CreateOperations();
         createOperations.createClientObjectWithUpdatedCardList(idCardNumber, clientId);
+
+    }
+
+    public void repeatAttemptAfterLink() {
+        System.out.println("Ввдены ошибочные данные, хотите повторить попытку? 1 - да / 2 - нет");
+        String choose = sc.nextLine();
+        switch (choose) {
+            case "1":
+                linkCardToClientMenu();
+                break;
+            case "2":
+                break;
+            default:
+                System.out.println("\nВыберите существующий пункт меню\n");
+                try {
+                    Thread.sleep(1800);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                break;
+        }
     }
 }
