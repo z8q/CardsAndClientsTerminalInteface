@@ -1,8 +1,8 @@
 package com.z8q.service;
 
 import com.google.gson.Gson;
-import com.z8q.dto.Card;
-import com.z8q.dto.Client;
+import com.z8q.models.Card;
+import com.z8q.models.Client;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

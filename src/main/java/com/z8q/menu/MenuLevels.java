@@ -1,7 +1,10 @@
 package com.z8q.menu;
 
-import com.z8q.cardpropeties.FormFactor;
-import com.z8q.handler.MenuHandler;
+import com.z8q.dto.CardDTO;
+import com.z8q.dto.ClientDTO;
+import com.z8q.dto.StatusMessage;
+import com.z8q.handler.CardHandler;
+import com.z8q.handler.ClientHandler;
 import com.z8q.service.CreateOperations;
 import com.z8q.service.ReadAndShowOperations;
 
@@ -10,11 +13,13 @@ import java.util.concurrent.TimeUnit;
 
 public class MenuLevels {
 
-    private Scanner sc = new Scanner(System.in);
+    private final Scanner sc = new Scanner(System.in);
 
     CreateOperations createOperations = new CreateOperations();
     ReadAndShowOperations readAndShowOperations = new ReadAndShowOperations();
-    MenuHandler menuHandler = new MenuHandler();
+    CardHandler cardHandler = new CardHandler();
+    ClientHandler clientHandler = new ClientHandler();
+    StatusMessage statusMessage = new StatusMessage();
 
     public void startMenu() {
         while (true) {
@@ -84,36 +89,126 @@ public class MenuLevels {
         System.out.println("-----------------------------------------");
         System.out.println("0. Выйти из программы");
     }
-    //!!!!!!
+
     public void addCard() {
+        CardDTO cardDTO = new CardDTO();
+
         System.out.println("Введите номер карты - 16 цифр");
-        String cardNumber16DigitsInput = sc.nextLine();
-        menuHandler.checkPAN(cardNumber16DigitsInput);
+        String cardNumber16DigitsInput = null;
+        statusMessage = new StatusMessage();
+        statusMessage.setCompletion(false);
+        while(!statusMessage.isCompletion()) {
+            System.out.println("Повторите попытку, для выхода просто нажмите Enter");
+            cardNumber16DigitsInput = sc.nextLine();
+            statusMessage = cardHandler.checkPAN(cardNumber16DigitsInput);
+            if(cardNumber16DigitsInput.length()==0) {
+                new MenuLevels().startMenu();
+            }
+        }
+        cardDTO.setPan(cardNumber16DigitsInput);
 
         System.out.println("Введите вид карты - REAL/VIRTUAL");
         String realOrVirtualInput = sc.nextLine();
-        menuHandler.checkFormFactor(realOrVirtualInput);
+        statusMessage = cardHandler.checkFormFactor(realOrVirtualInput);
+        while(!statusMessage.isCompletion()) {
+            System.out.println("Повторите попытку, для выхода просто нажмите Enter");
+            realOrVirtualInput = sc.nextLine();
+            statusMessage = cardHandler.checkFormFactor(realOrVirtualInput);
+            if(realOrVirtualInput.length()==0) {
+                new MenuLevels().startMenu();
+            }
+        }
+        cardDTO.setFormFactor(realOrVirtualInput);
 
-        System.out.println("Добавить чип в карту? - yes/no");
-        String hasAChipInput = sc.nextLine();
-        menuHandler.checkChip(hasAChipInput);
+        if (realOrVirtualInput.equals("VIRTUAL")) {
+            cardDTO.setChip("no");
+        } else {
+            System.out.println("Добавить чип в карту? - yes/no");
+            String hasAChipInput = sc.nextLine();
+            statusMessage = cardHandler.checkChip(hasAChipInput);
+            while(!statusMessage.isCompletion()) {
+                System.out.println("Повторите попытку, для выхода просто нажмите Enter");
+                hasAChipInput = sc.nextLine();
+                statusMessage = cardHandler.checkChip(hasAChipInput);
+                if(hasAChipInput.length()==0) {
+                    new MenuLevels().startMenu();
+                }
+            }
+            cardDTO.setChip(hasAChipInput);
+        }
 
         System.out.println("Введите пин-код - 4 цифры");
         String pinInput = sc.nextLine();
-        menuHandler.checkPin(pinInput);
+        statusMessage = cardHandler.checkPin(pinInput);
+        while(!statusMessage.isCompletion()) {
+            System.out.println("Повторите попытку, для выхода просто нажмите Enter");
+            pinInput = sc.nextLine();
+            statusMessage = cardHandler.checkPin(pinInput);
+            if(pinInput.length()==0) {
+                new MenuLevels().startMenu();
+            }
+        }
+        cardDTO.setPinCode(pinInput);
+
+        cardHandler.sendCardToIo(cardDTO);
     }
 
     public void addClient() {
+        ClientDTO clientDTO = new ClientDTO();
+
         System.out.println("Введите фамилию");
         String lastnameInput = sc.nextLine();
+        statusMessage = clientHandler.checkLastName(lastnameInput);
+        while(!statusMessage.isCompletion()) {
+            System.out.println("Фамилия могжет содержать только буквы\nПовторите ввод, для выхода просто нажмите Enter");
+            lastnameInput = sc.nextLine();
+            statusMessage = clientHandler.checkLastName(lastnameInput);
+            if(lastnameInput.length()==0) {
+                new MenuLevels().startMenu();
+            }
+        }
+        clientDTO.setLastname(lastnameInput);
+
         System.out.println("Введите имя");
         String firstnameInput = sc.nextLine();
+        statusMessage = clientHandler.checkFirstName(firstnameInput);
+        while(!statusMessage.isCompletion()) {
+            System.out.println("Имя может содержать только буквы\nПовторите ввод, для выхода просто нажмите Enter");
+            firstnameInput = sc.nextLine();
+            statusMessage = clientHandler.checkFirstName(firstnameInput);
+            if(firstnameInput.length()==0) {
+                new MenuLevels().startMenu();
+            }
+        }
+        clientDTO.setFirstname(firstnameInput);
+
         System.out.println("Введите отчество");
         String middlenameInput = sc.nextLine();
+        statusMessage = clientHandler.checkMiddleName(middlenameInput);
+        while(!statusMessage.isCompletion()) {
+            System.out.println("Отчество может содержать только буквы\nПовторите ввод, для выхода просто нажмите Enter");
+            middlenameInput = sc.nextLine();
+            statusMessage = clientHandler.checkMiddleName(middlenameInput);
+            if(middlenameInput.length()==0) {
+                new MenuLevels().startMenu();
+            }
+        }
+        clientDTO.setMiddlename(middlenameInput);
+
         System.out.println("Введите дату рождения - формат дд/мм/гггг");
         String birthDateInput = sc.nextLine();
+        statusMessage = clientHandler.checkBirthDate(birthDateInput);
+        while(!statusMessage.isCompletion()) {
+            System.out.println("Формат даты - формат дд/мм/гггг\nПовторите ввод, для выхода просто нажмите Enter");
+            birthDateInput = sc.nextLine();
+            statusMessage = clientHandler.checkBirthDate(birthDateInput);
+            if(birthDateInput.length()==0) {
+                new MenuLevels().startMenu();
+            }
+        }
+        clientDTO.setDate(birthDateInput);
 
-        createOperations.createClientObject(lastnameInput, firstnameInput, middlenameInput, birthDateInput);
+        clientHandler.sendCardToIo(clientDTO);
     }
 
     public void secondMenu() {

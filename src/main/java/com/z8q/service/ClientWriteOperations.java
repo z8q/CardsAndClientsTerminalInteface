@@ -1,8 +1,8 @@
 package com.z8q.service;
 
 import com.google.gson.Gson;
-import com.z8q.dto.Card;
-import com.z8q.dto.Client;
+import com.z8q.interfaces.ClientInterface;
+import com.z8q.models.Client;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,42 +14,23 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WriteOperations {
+public class ClientWriteOperations implements ClientInterface {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final String CARDPATH = "src/main/resources/CardList.txt";
     private static final String CLIENTPATH = "src/main/resources/ClientList.txt";
 
-    public void writeCardInfo(Card card) {
+    @Override
+    public void getClientById(Client client) {
 
-        try {
-            LOGGER.info("Card with id {} was added to file", card.getId());
-
-            String contentCards = Files.lines(Paths.get(CARDPATH)).reduce("", String::concat);
-            Gson gsonCards = new Gson();
-            List<Card> cardArray = gsonCards.fromJson(contentCards, ArrayList.class);
-            if (cardArray != null) {
-                cardArray.add(card);
-                String contentCardsNew = gsonCards.toJson(cardArray);
-                BufferedWriter writer = new BufferedWriter(new FileWriter(CARDPATH));
-                writer.write(contentCardsNew);
-                writer.close();
-            } else {
-                List<Card> tempCardArray = new ArrayList<>();
-                tempCardArray.add(card);
-                String humansString = gsonCards.toJson(tempCardArray);
-                BufferedWriter writer = new BufferedWriter(new FileWriter(CARDPATH));
-                writer.write(humansString);
-                writer.close();
-            }
-        } catch (IOException e) {
-            LOGGER.error("Error was occurred while saving Card with id {}", card.getId());
-            e.printStackTrace();
-        }
     }
 
-    public void writeClientInfo(Client client) {
+    @Override
+    public void getAll(Client client) {
 
+    }
+
+    @Override
+    public void save(Client client) {
         try {
             LOGGER.info("Client with id {} was added to file", client.getId());
 
@@ -76,8 +57,8 @@ public class WriteOperations {
         }
     }
 
-    public void writeUpdatedClientInfo(Client client, int cardId) {
-
+    @Override
+    public void linkCardToClient(Client client, int cardId) {
         try {
             LOGGER.info("Card with id {} was linked to Client with id {} and added to file", cardId, client.getId());
 

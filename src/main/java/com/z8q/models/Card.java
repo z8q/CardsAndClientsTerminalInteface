@@ -1,4 +1,4 @@
-package com.z8q.dto;
+package com.z8q.models;
 
 import com.z8q.cardpropeties.FormFactor;
 
@@ -15,7 +15,7 @@ public class Card {
     private boolean hasAChip;
     private String pinCode;
 
-    public Card(){}
+    private Card(){}
 
     public Long getId() {
         return id;

@@ -2,8 +2,8 @@ package com.z8q.service;
 
 import com.google.gson.Gson;
 import com.z8q.cardpropeties.FormFactor;
-import com.z8q.dto.Card;
-import com.z8q.dto.Client;
+import com.z8q.models.Card;
+import com.z8q.models.Client;
 import com.z8q.menu.MenuLevels;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,14 +20,15 @@ import java.util.List;
 
 public class CreateOperations {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(CreateOperations.class);
     private Long cardId = 0L;
     private Long clientId = 0L;
 
-    WriteOperations writeOperations = new WriteOperations();
+    CardWriteOperations cardWriteOperations = new CardWriteOperations();
+    ClientWriteOperations clientWriteOperations = new ClientWriteOperations();
 
 
-    public void createCardObject(String cardNumber16DigitsInput, FormFactor formFactor, boolean x, String pinInput) {
+    public void createCardObject(String cardNumber16DigitsInput, String formFactor, String isHasAChipArg, String pinInput) {
         try {
             String path = "src/main/resources/CardList.txt";
             String contentCards = Files.lines(Paths.get(path)).reduce("", String::concat);
@@ -43,17 +44,29 @@ public class CreateOperations {
             e.printStackTrace();
         }
 
+        FormFactor formEnum;
+        if (formFactor.equals("REAL")) {
+            formEnum = FormFactor.REAL;
+        } else {
+            formEnum = FormFactor.VIRTUAL;
+        }
+
+        boolean hasChip = false;
+        if (isHasAChipArg.equals("yes")) {
+            hasChip = true;
+        }
+
         Card card = new Card.Builder()
                 .withId(cardId)
                 .withCardNumberFirstFourDigits(cardNumber16DigitsInput.substring(0, 4))
                 .withCardNumberSecondEightDigits(cardNumber16DigitsInput.substring(4, 12))
                 .withCardNumberThirdFourDigits(cardNumber16DigitsInput.substring(12, 16))
-                .withFormFactor(formFactor)
-                .withHasAChip(x)
+                .withFormFactor(formEnum)
+                .withHasAChip(hasChip)
                 .withPinCode(pinInput)
                 .build();
 
-        writeOperations.writeCardInfo(card);
+        cardWriteOperations.save(card);
         System.out.println("Карта сохранена \n");
     }
 
@@ -90,7 +103,7 @@ public class CreateOperations {
                 .withClientCards(Collections.emptyList())
                 .build();
 
-        writeOperations.writeClientInfo(client);
+        clientWriteOperations.save(client);
         System.out.println("Клиент сохранен \n");
     }
 
@@ -124,7 +137,7 @@ public class CreateOperations {
                                             .withClientCards(listOfCards)
                                             .build();
 
-                                    writeOperations.writeUpdatedClientInfo(clientAddElementToList, card.getId().intValue());
+                                    clientWriteOperations.linkCardToClient(clientAddElementToList, card.getId().intValue());
                                 }
                             }
                         } else {
