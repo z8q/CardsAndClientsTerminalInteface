@@ -75,10 +75,10 @@ public class ClientHandler implements ClientCheck {
 //        }
     }
 
-    @Override
-    public void showClientList() {
-        clientIO.getAll();
-    }
+//    @Override
+//    public void showClientList() {
+//        clientIO.getAll();
+//    }
 
     @Override
     public boolean addCardToClient(String cardId, String clientId) {
@@ -93,7 +93,7 @@ public class ClientHandler implements ClientCheck {
     }
 
     @Override
-    public boolean saveClient(ClientDTO clientDTO){
+    public boolean checkClientDTO(ClientDTO clientDTO){
         MyStatus lastname = checkLastName(clientDTO.getLastname());
         MyStatus firstname = checkFirstName(clientDTO.getFirstname());
         MyStatus middlename = checkMiddleName(clientDTO.getMiddlename());
@@ -104,8 +104,8 @@ public class ClientHandler implements ClientCheck {
             System.out.println(sb);
             return false;
         } else {
-            clientIO.createClientObject(clientDTO.getLastname(), clientDTO.getFirstname(), clientDTO.getMiddlename(), clientDTO.getDate());
-            return true;
+            return clientIO.createClientObject(clientDTO.getLastname(), clientDTO.getFirstname(),
+                    clientDTO.getMiddlename(), clientDTO.getDate()).isStatus();
         }
     }
 }

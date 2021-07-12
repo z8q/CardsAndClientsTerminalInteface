@@ -9,7 +9,7 @@ public interface CardCheck {
     MyStatus checkFormFactor(String form);
     MyStatus checkChip(String chip);
     MyStatus checkPin(String pin);
-    void showCardList();
-    boolean saveCard(CardDTO send);
+//    void showCardList();
+    boolean checkCardDTO(CardDTO send);
 
 }

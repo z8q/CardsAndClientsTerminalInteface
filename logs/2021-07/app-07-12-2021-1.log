@@ -38,3 +38,5 @@
 2021-07-12 15:47:43,978 INFO com.z8q.service.ClientWriteOperations Card with id 6 was linked to Client with id 2 and added to file
 2021-07-12 17:21:14,737 INFO com.z8q.service.ClientWriteOperations Client with id 3 was added to file
 2021-07-12 17:21:37,794 INFO com.z8q.service.ClientWriteOperations Card with id 7 was linked to Client with id 2 and added to file
+2021-07-12 18:18:47,484 WARN com.z8q.service.ClientWriteOperations There is no client with id 5
+2021-07-12 18:19:03,058 INFO com.z8q.service.ClientWriteOperations Card with id 5 was linked to Client with id 3 and added to file

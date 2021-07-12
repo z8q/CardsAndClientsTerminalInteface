@@ -87,7 +87,7 @@ public class MenuLevels implements MenuInterface {
         String pinInput = sc.nextLine();
 
         CardDTO cardDTO = new CardDTO(cardNumber16DigitsInput, realOrVirtualInput, hasAChipInput, pinInput);
-        if (!cardCheck.saveCard(cardDTO)) {
+        if (!cardCheck.checkCardDTO(cardDTO)) {
             startMenu();
         }
     }
@@ -107,7 +107,7 @@ public class MenuLevels implements MenuInterface {
         String birthDateInput = sc.nextLine();
 
         ClientDTO clientDTO = new ClientDTO(lastnameInput, firstnameInput, middlenameInput, birthDateInput);
-        if (!clientCheck.saveClient(clientDTO)) {
+        if (!clientCheck.checkClientDTO(clientDTO)) {
             startMenu();
         }
     }

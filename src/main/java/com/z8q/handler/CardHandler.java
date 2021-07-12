@@ -62,12 +62,12 @@ public class CardHandler implements CardCheck {
         }
         return status;
     }
+//    @Override
+//    public void showCardList() {
+//        cardIO.getAll();
+//    }
     @Override
-    public void showCardList() {
-        cardIO.getAll();
-    }
-    @Override
-    public boolean saveCard(CardDTO cardDTO){
+    public boolean checkCardDTO(CardDTO cardDTO){
         checkPAN(cardDTO.getPan());
         checkFormFactor(cardDTO.getFormFactor());
         checkChip(cardDTO.getChip());
@@ -78,8 +78,7 @@ public class CardHandler implements CardCheck {
             System.out.println(sb);
             return false;
         } else {
-            cardIO.createCardObject(cardDTO.getPan(), cardDTO.getFormFactor(), cardDTO.getChip(), cardDTO.getPinCode());
-            return true;
+            return cardIO.createCardObject(cardDTO.getPan(), cardDTO.getFormFactor(), cardDTO.getChip(), cardDTO.getPinCode()).isStatus();
         }
     }
 }

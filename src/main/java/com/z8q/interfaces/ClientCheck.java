@@ -9,7 +9,7 @@ public interface ClientCheck {
     MyStatus checkFirstName(String firstNameInput);
     MyStatus checkMiddleName(String middlenameInput);
     MyStatus checkBirthDate(String birthDateInput);
-    void showClientList();
+//    void showClientList();
     boolean addCardToClient(String cardId, String clientId);
-    boolean saveClient(ClientDTO clientDTO);
+    boolean checkClientDTO(ClientDTO clientDTO);
 }

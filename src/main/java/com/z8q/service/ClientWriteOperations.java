@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.z8q.interfaces.ClientIO;
 import com.z8q.models.Card;
 import com.z8q.models.Client;
+import com.z8q.propeties.MyStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,8 +12,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -48,7 +47,8 @@ public class ClientWriteOperations implements ClientIO {
     }
 
     @Override
-    public void save(Client client) {
+    public MyStatus save(Client client) {
+        MyStatus status = new MyStatus();
         try {
             LOGGER.info("Client with id {} was added to file", client.getId());
 
@@ -71,14 +71,20 @@ public class ClientWriteOperations implements ClientIO {
                 writer.write(humansString);
                 writer.close();
             }
+            status.setStatus(true);
+            return status;
         } catch (IOException e) {
             LOGGER.error("Error was occurred while saving Client with id {}", client.getId());
             e.printStackTrace();
+            status.setStatus(false);
+            status.setMessage("Error on Client save stage");
+            return status;
         }
     }
 
     @Override
-    public void linkCardToClient(Client client, int cardId) {
+    public MyStatus linkCardToClient(Client client, int cardId) {
+        MyStatus status = new MyStatus();
         try {
             LOGGER.info("Card with id {} was linked to Client with id {} and added to file", cardId, client.getId());
 
@@ -101,14 +107,20 @@ public class ClientWriteOperations implements ClientIO {
                 writer.write(humansString);
                 writer.close();
             }
+            status.setStatus(true);
+            return status;
         } catch (IOException e) {
             LOGGER.error("Card with id {} wasn't linked to Client with id {}", cardId, client.getId());
             e.printStackTrace();
+            status.setStatus(false);
+            status.setMessage("Error appears on ClientWriteOperations - linkCardToClient stage");
+            return status;
         }
     }
 
     @Override
-    public void createClientObject(String lastnameInput, String firstnameInput, String middlenameInput, String birthDateInput) {
+    public MyStatus createClientObject(String lastnameInput, String firstnameInput, String middlenameInput, String birthDateInput) {
+        MyStatus status = new MyStatus();
         Date date = null;
         try {
             date = new SimpleDateFormat("dd/MM/yyyy").parse(birthDateInput);
@@ -145,6 +157,8 @@ public class ClientWriteOperations implements ClientIO {
 
         save(client);
         System.out.println("Клиент сохранен \n");
+        status.setStatus(true);
+        return status;
     }
 
     @Override

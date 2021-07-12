@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.z8q.propeties.FormFactor;
 import com.z8q.interfaces.CardIO;
 import com.z8q.models.Card;
+import com.z8q.propeties.MyStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,7 +42,8 @@ public class CardWriteOperations implements CardIO {
     }
 
     @Override
-    public void save(Card card) {
+    public MyStatus save(Card card) {
+        MyStatus status = new MyStatus();
         try {
             LOGGER.info("Card with id {} was added to file", card.getId());
 
@@ -64,14 +66,20 @@ public class CardWriteOperations implements CardIO {
                 writer.write(humansString);
                 writer.close();
             }
+            status.setStatus(true);
+            return status;
         } catch (IOException e) {
             LOGGER.error("Error was occurred while saving Client with id {}", card.getId());
             e.printStackTrace();
+            status.setStatus(false);
+            status.setMessage("Error on Card save stage");
+            return status;
         }
     }
 
     @Override
-    public void createCardObject(String cardNumber16DigitsInput, String formFactor, String isHasAChipArg, String pinInput) {
+    public MyStatus createCardObject(String cardNumber16DigitsInput, String formFactor, String isHasAChipArg, String pinInput) {
+        MyStatus status = new MyStatus();
         try {
             //String path = "src/main/resources/CardList.txt";
             //String contentCards = Files.lines(Paths.get(path)).reduce("", String::concat);
@@ -87,6 +95,8 @@ public class CardWriteOperations implements CardIO {
         } catch (IOException e) {
             LOGGER.error("Error while creating a Card");
             e.printStackTrace();
+            status.setStatus(false);
+            return status;
         }
         FormFactor formEnum;
         if (formFactor.equals("REAL")) {
@@ -99,7 +109,6 @@ public class CardWriteOperations implements CardIO {
         if (isHasAChipArg.equals("yes")) {
             hasChip = true;
         }
-
         Card card = new Card.Builder()
                 .withId(cardId)
                 .withCardNumberFirstFourDigits(cardNumber16DigitsInput.substring(0, 4))
@@ -112,5 +121,7 @@ public class CardWriteOperations implements CardIO {
 
         save(card);
         System.out.println("Карта сохранена \n");
+        status.setStatus(true);
+        return status;
     }
 }
