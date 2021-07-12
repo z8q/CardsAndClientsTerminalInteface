@@ -1,0 +1,40 @@
+2021-07-12 09:41:08,802 INFO com.z8q.service.CardWriteOperations Card with id 7 was added to file
+2021-07-12 09:42:10,559 INFO com.z8q.service.CardWriteOperations Card with id 2 was added to file
+2021-07-12 09:49:10,209 INFO com.z8q.service.CardWriteOperations Card with id 2 was added to file
+2021-07-12 09:56:57,861 INFO com.z8q.service.CardWriteOperations Card with id 2 was added to file
+2021-07-12 10:05:30,674 INFO com.z8q.service.CardWriteOperations Card with id 2 was added to file
+2021-07-12 10:09:46,014 INFO com.z8q.service.CardWriteOperations Card with id 2 was added to file
+2021-07-12 10:10:20,394 INFO com.z8q.service.CardWriteOperations Card with id 1 was added to file
+2021-07-12 10:10:47,752 INFO com.z8q.service.CardWriteOperations Card with id 2 was added to file
+2021-07-12 11:00:15,557 INFO com.z8q.service.ClientWriteOperations Client with id 5 was added to file
+2021-07-12 11:01:15,615 INFO com.z8q.service.ClientWriteOperations Client with id 6 was added to file
+2021-07-12 11:18:44,399 INFO com.z8q.service.ClientWriteOperations Client with id 7 was added to file
+2021-07-12 11:34:29,758 INFO com.z8q.service.ClientWriteOperations Client with id 8 was added to file
+2021-07-12 11:35:12,945 INFO com.z8q.service.ClientWriteOperations Card with id 2 was linked to Client with id 3 and added to file
+2021-07-12 13:01:12,149 INFO com.z8q.service.CardWriteOperations Card with id 3 was added to file
+2021-07-12 13:01:57,597 INFO com.z8q.service.ClientWriteOperations Client with id 9 was added to file
+2021-07-12 13:02:59,609 WARN com.z8q.service.ClientWriteOperations There is no card with id 9
+2021-07-12 13:03:27,211 INFO com.z8q.service.ClientWriteOperations Card with id 3 was linked to Client with id 9 and added to file
+2021-07-12 14:14:27,602 INFO com.z8q.service.ClientWriteOperations Client with id 10 was added to file
+2021-07-12 14:14:59,582 INFO com.z8q.service.CardWriteOperations Card with id 4 was added to file
+2021-07-12 14:15:23,125 INFO com.z8q.service.ClientWriteOperations Card with id 4 was linked to Client with id 10 and added to file
+2021-07-12 14:47:24,349 INFO com.z8q.service.CardWriteOperations Card with id 1 was added to file
+2021-07-12 14:47:44,708 INFO com.z8q.service.CardWriteOperations Card with id 2 was added to file
+2021-07-12 14:48:11,660 INFO com.z8q.service.ClientWriteOperations Client with id 1 was added to file
+2021-07-12 14:48:23,517 INFO com.z8q.service.ClientWriteOperations Card with id 1 was linked to Client with id 1 and added to file
+2021-07-12 14:51:45,822 INFO com.z8q.service.ClientWriteOperations Card with id 2 was linked to Client with id 1 and added to file
+2021-07-12 14:56:20,118 INFO com.z8q.service.CardWriteOperations Card with id 1 was added to file
+2021-07-12 14:56:43,237 INFO com.z8q.service.CardWriteOperations Card with id 2 was added to file
+2021-07-12 14:56:58,332 INFO com.z8q.service.ClientWriteOperations Client with id 1 was added to file
+2021-07-12 14:57:11,182 INFO com.z8q.service.ClientWriteOperations Card with id 1 was linked to Client with id 1 and added to file
+2021-07-12 14:57:33,323 INFO com.z8q.service.ClientWriteOperations Card with id 2 was linked to Client with id 1 and added to file
+2021-07-12 15:18:16,921 INFO com.z8q.service.CardWriteOperations Card with id 3 was added to file
+2021-07-12 15:21:46,428 INFO com.z8q.service.CardWriteOperations Card with id 4 was added to file
+2021-07-12 15:23:49,254 INFO com.z8q.service.CardWriteOperations Card with id 5 was added to file
+2021-07-12 15:30:58,980 INFO com.z8q.service.CardWriteOperations Card with id 6 was added to file
+2021-07-12 15:39:18,291 INFO com.z8q.service.CardWriteOperations Card with id 7 was added to file
+2021-07-12 15:47:09,429 INFO com.z8q.service.ClientWriteOperations Client with id 2 was added to file
+2021-07-12 15:47:37,321 INFO com.z8q.service.ClientWriteOperations Card with id 5 was linked to Client with id 2 and added to file
+2021-07-12 15:47:43,978 INFO com.z8q.service.ClientWriteOperations Card with id 6 was linked to Client with id 2 and added to file
+2021-07-12 17:21:14,737 INFO com.z8q.service.ClientWriteOperations Client with id 3 was added to file
+2021-07-12 17:21:37,794 INFO com.z8q.service.ClientWriteOperations Card with id 7 was linked to Client with id 2 and added to file

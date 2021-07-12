@@ -1,4 +1,4 @@
-package com.z8q.cardpropeties;
+package com.z8q.propeties;
 
 public enum FormFactor {
     REAL, VIRTUAL
