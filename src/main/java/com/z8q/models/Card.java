@@ -1,6 +1,6 @@
 package com.z8q.models;
 
-import com.z8q.cardpropeties.FormFactor;
+import com.z8q.propeties.FormFactor;
 
 import java.util.Objects;
 

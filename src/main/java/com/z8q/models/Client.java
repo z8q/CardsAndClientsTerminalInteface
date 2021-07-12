@@ -14,7 +14,7 @@ public class Client {
     private String middleName;
     private Date birthDate;
 
-    private List<Card> clientCards = new ArrayList<>();
+    private List<String> clientCards = new ArrayList<>();
 
     private Client() {}
 
@@ -38,7 +38,7 @@ public class Client {
         return birthDate;
     }
 
-    public List<Card> getClientCards() {
+    public List<String> getClientCards() {
         return clientCards;
     }
 
@@ -94,7 +94,7 @@ public class Client {
             newClient.birthDate = birthDate;
             return this;
         }
-        public Builder withClientCards(List<Card> clientCards) {
+        public Builder withClientCards(List<String> clientCards) {
             newClient.clientCards = clientCards;
             return this;
         }

@@ -6,7 +6,14 @@ public class ClientDTO {
     private String middlename;
     private String date;
 
-    public ClientDTO() {}
+    // public ClientDTO() {}
+
+    public ClientDTO(String lastname, String firstname, String middlename, String date) {
+        this.lastname = lastname;
+        this.firstname = firstname;
+        this.middlename = middlename;
+        this.date = date;
+    }
 
     public String getLastname() {
         return lastname;

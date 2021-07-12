@@ -8,7 +8,14 @@ public class CardDTO {
     private String chip;
     private String pinCode;
 
-    public CardDTO(){}
+//    public CardDTO(){}
+
+    public CardDTO(String pan, String formFactor, String chip, String pinCode) {
+        this.pan = pan;
+        this.formFactor = formFactor;
+        this.chip = chip;
+        this.pinCode = pinCode;
+    }
 
     public String getPan() {
         return pan;
