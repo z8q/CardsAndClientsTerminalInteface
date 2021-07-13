@@ -1,0 +1,6 @@
+2021-07-13 09:37:07,486 INFO com.z8q.service.ClientWriteOperations Client with id 4 was added to file
+2021-07-13 10:03:29,185 INFO com.z8q.service.ClientWriteOperations Card with id 1 was linked to Client with id 1 and added to file
+2021-07-13 10:03:42,174 WARN com.z8q.service.ClientWriteOperations There is no client with id 123
+2021-07-13 10:04:00,365 WARN com.z8q.service.ClientWriteOperations There is no card with id 123
+2021-07-13 10:19:26,250 WARN com.z8q.service.ClientIOImpl There is no client with id 7
+2021-07-13 10:19:39,319 INFO com.z8q.service.ClientIOImpl Card with id 7 was linked to Client with id 4 and added to file

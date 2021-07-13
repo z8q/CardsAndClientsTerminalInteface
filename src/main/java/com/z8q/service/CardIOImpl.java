@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.z8q.propeties.FormFactor;
 import com.z8q.interfaces.CardIO;
 import com.z8q.models.Card;
+import com.z8q.propeties.MyStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,34 +15,46 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class CardWriteOperations implements CardIO {
+public class CardIOImpl implements CardIO {
 
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String CARDPATH = "src/main/resources/CardList.txt";
-    private Long cardId = 0L;
 
     @Override
-    public void getCardById(Card card) {
-
+    public Card getCardById(Long cardIndex) {
+        Scanner sc = null;
+        try {
+            sc = new Scanner(new File(CARDPATH));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String contentCards = sc.nextLine();
+        Gson gsonCards = new Gson();
+        List<Card> cardArray = gsonCards.fromJson(contentCards, ArrayList.class);
+        return cardArray.get(cardIndex.intValue());
     }
 
     @Override
-    public void getAll() {
+    public List<Card> getAll() {
+        List<Card> tempList = null;
         try {
             String content = Files.lines(Paths.get(CARDPATH)).reduce("", String::concat);
             Gson gson = new Gson();
             List<Card> printCardList = gson.fromJson(content, ArrayList.class);
-            for (int i = 0; i < printCardList.size(); i++) {
-                System.out.println(printCardList.get(i));
-            }
+            tempList = printCardList;
+//            for (int i = 0; i < printCardList.size(); i++) {
+//                System.out.println(printCardList.get(i));
+//            }
         } catch (IOException e) {
             LOGGER.error("Wrong path to file or Wrong JSON syntax");
             e.printStackTrace();
         }
+        return tempList;
     }
 
     @Override
-    public void save(Card card) {
+    public MyStatus save(Card card) {
+        MyStatus status = new MyStatus();
         try {
             LOGGER.info("Card with id {} was added to file", card.getId());
 
@@ -64,14 +77,21 @@ public class CardWriteOperations implements CardIO {
                 writer.write(humansString);
                 writer.close();
             }
+            status.setStatus(true);
+            return status;
         } catch (IOException e) {
             LOGGER.error("Error was occurred while saving Client with id {}", card.getId());
             e.printStackTrace();
+            status.setStatus(false);
+            status.setMessage("Error on Card save stage");
+            return status;
         }
     }
 
     @Override
-    public void createCardObject(String cardNumber16DigitsInput, String formFactor, String isHasAChipArg, String pinInput) {
+    public MyStatus createCardObject(String cardNumber16DigitsInput, String formFactor, String isHasAChipArg, String pinInput) {
+        MyStatus status = new MyStatus();
+        Long cardId = 0L;
         try {
             //String path = "src/main/resources/CardList.txt";
             //String contentCards = Files.lines(Paths.get(path)).reduce("", String::concat);
@@ -87,6 +107,8 @@ public class CardWriteOperations implements CardIO {
         } catch (IOException e) {
             LOGGER.error("Error while creating a Card");
             e.printStackTrace();
+            status.setStatus(false);
+            return status;
         }
         FormFactor formEnum;
         if (formFactor.equals("REAL")) {
@@ -99,7 +121,6 @@ public class CardWriteOperations implements CardIO {
         if (isHasAChipArg.equals("yes")) {
             hasChip = true;
         }
-
         Card card = new Card.Builder()
                 .withId(cardId)
                 .withCardNumberFirstFourDigits(cardNumber16DigitsInput.substring(0, 4))
@@ -109,8 +130,12 @@ public class CardWriteOperations implements CardIO {
                 .withHasAChip(hasChip)
                 .withPinCode(pinInput)
                 .build();
-
-        save(card);
-        System.out.println("Карта сохранена \n");
+        if(save(card).isStatus()) {
+            status.setStatus(true);
+            System.out.println("Карта сохранена \n");
+        } else {
+            status.setStatus(false);
+        }
+        return status;
     }
 }
