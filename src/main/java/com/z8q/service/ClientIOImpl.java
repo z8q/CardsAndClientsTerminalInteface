@@ -8,15 +8,12 @@ import com.z8q.propeties.MyStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class ClientWriteOperations implements ClientIO {
+public class ClientIOImpl implements ClientIO {
 
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String CLIENTPATH = "src/main/resources/ClientList.txt";
@@ -25,25 +22,37 @@ public class ClientWriteOperations implements ClientIO {
 
 
     @Override
-    public void getClientById(Client client) {
-
+    public Client getClientById(Long clientIndex) {
+        Scanner sc = null;
+        try {
+            sc = new Scanner(new File(CLIENTPATH));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String contentClients = sc.nextLine();
+        Gson gsonCards = new Gson();
+        List<Client> clientArray = gsonCards.fromJson(contentClients, ArrayList.class);
+        return clientArray.get(clientIndex.intValue());
     }
 
     @Override
-    public void getAll() {
+    public List<Client> getAll() {
+        List<Client> tempList = null;
         try {
             //String content = Files.lines(Paths.get("src/main/resources/ClientList.txt")).reduce("", String::concat);
             Scanner sc = new Scanner(new File(CLIENTPATH));
             String content = sc.nextLine();
             Gson gson = new Gson();
             List<Client> printClientList = gson.fromJson(content, ArrayList.class);
-            for (int i = 0; i < printClientList.size(); i++) {
-                System.out.println(printClientList.get(i));
-            }
+            tempList = printClientList;
+//            for (int i = 0; i < printClientList.size(); i++) {
+//                System.out.println(printClientList.get(i));
+//            }
         } catch (IOException e) {
             LOGGER.error("Wrong path to file or Wrong JSON syntax");
             e.printStackTrace();
         }
+        return tempList;
     }
 
     @Override
@@ -145,7 +154,6 @@ public class ClientWriteOperations implements ClientIO {
             LOGGER.error("Error while creating a Client");
             e.printStackTrace();
         }
-
         Client client = new Client.Builder()
                 .withId(clientId)
                 .withLastName(lastnameInput)
@@ -154,15 +162,18 @@ public class ClientWriteOperations implements ClientIO {
                 .withBirthDate(date)
                 .withClientCards(Collections.emptyList())
                 .build();
-
-        save(client);
-        System.out.println("Клиент сохранен \n");
-        status.setStatus(true);
+        if(save(client).isStatus()) {
+            status.setStatus(true);
+            System.out.println("Клиент сохранен \n");
+        } else {
+            status.setStatus(false);
+        }
         return status;
     }
 
     @Override
-    public boolean createClientObjectWithUpdatedCardList(String idCardNumber, String clientId) {
+    public MyStatus createClientObjectWithUpdatedCardList(String idCardNumber, String clientId) {
+        MyStatus status = new MyStatus();
         try {
             if ((idCardNumber.matches("[-+]?\\d+")) && (clientId.matches("[-+]?\\d+"))) {
 
@@ -199,26 +210,26 @@ public class ClientWriteOperations implements ClientIO {
                                         .build();
 
                                 linkCardToClient(clientAddElementToList, card.getId().intValue());
-                                return true;
+                                status.setStatus(true);
                             }
                         }
-                        return false;
                     } else {
                         LOGGER.warn("There is no card with id {}", idCardNumber);
-                        return false;
+                        status.setStatus(false);
                     }
                 } else {
                     LOGGER.warn("There is no client with id {}", clientId);
-                    return false;
+                    status.setStatus(false);
                 }
             } else {
                 LOGGER.warn("Error with arguments while linking Card to Client");
-                return false;
+                status.setStatus(false);
             }
         } catch(IOException e){
             LOGGER.error("Intput error while linking card to client");
             e.printStackTrace();
-            return false;
+            status.setStatus(false);
         }
+        return status;
     }
 }

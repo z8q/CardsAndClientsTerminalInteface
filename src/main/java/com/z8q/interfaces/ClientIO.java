@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface ClientIO {
-    void getClientById(Client client);
-    void getAll();
+    Client getClientById(Long clientIndex);
+    List<Client> getAll();
     MyStatus save(Client client);
     MyStatus linkCardToClient(Client client, int cardId);
     MyStatus createClientObject(String lastnameInput, String firstnameInput, String middlenameInput, String birthDateInput);
-    boolean createClientObjectWithUpdatedCardList(String idCardNumber, String clientId);
+    MyStatus createClientObjectWithUpdatedCardList(String idCardNumber, String clientId);
 }

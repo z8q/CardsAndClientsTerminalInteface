@@ -15,30 +15,41 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class CardWriteOperations implements CardIO {
+public class CardIOImpl implements CardIO {
 
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String CARDPATH = "src/main/resources/CardList.txt";
-    private Long cardId = 0L;
 
     @Override
-    public void getCardById(Card card) {
-
+    public Card getCardById(Long cardIndex) {
+        Scanner sc = null;
+        try {
+            sc = new Scanner(new File(CARDPATH));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String contentCards = sc.nextLine();
+        Gson gsonCards = new Gson();
+        List<Card> cardArray = gsonCards.fromJson(contentCards, ArrayList.class);
+        return cardArray.get(cardIndex.intValue());
     }
 
     @Override
-    public void getAll() {
+    public List<Card> getAll() {
+        List<Card> tempList = null;
         try {
             String content = Files.lines(Paths.get(CARDPATH)).reduce("", String::concat);
             Gson gson = new Gson();
             List<Card> printCardList = gson.fromJson(content, ArrayList.class);
-            for (int i = 0; i < printCardList.size(); i++) {
-                System.out.println(printCardList.get(i));
-            }
+            tempList = printCardList;
+//            for (int i = 0; i < printCardList.size(); i++) {
+//                System.out.println(printCardList.get(i));
+//            }
         } catch (IOException e) {
             LOGGER.error("Wrong path to file or Wrong JSON syntax");
             e.printStackTrace();
         }
+        return tempList;
     }
 
     @Override
@@ -80,6 +91,7 @@ public class CardWriteOperations implements CardIO {
     @Override
     public MyStatus createCardObject(String cardNumber16DigitsInput, String formFactor, String isHasAChipArg, String pinInput) {
         MyStatus status = new MyStatus();
+        Long cardId = 0L;
         try {
             //String path = "src/main/resources/CardList.txt";
             //String contentCards = Files.lines(Paths.get(path)).reduce("", String::concat);
@@ -118,10 +130,12 @@ public class CardWriteOperations implements CardIO {
                 .withHasAChip(hasChip)
                 .withPinCode(pinInput)
                 .build();
-
-        save(card);
-        System.out.println("Карта сохранена \n");
-        status.setStatus(true);
+        if(save(card).isStatus()) {
+            status.setStatus(true);
+            System.out.println("Карта сохранена \n");
+        } else {
+            status.setStatus(false);
+        }
         return status;
     }
 }

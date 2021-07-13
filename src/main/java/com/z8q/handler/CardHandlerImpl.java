@@ -1,18 +1,10 @@
 package com.z8q.handler;
 
 import com.z8q.dto.CardDTO;
-import com.z8q.interfaces.CardCheck;
-import com.z8q.interfaces.CardIO;
+import com.z8q.interfaces.CardHandler;
 import com.z8q.propeties.MyStatus;
 
-public class CardHandler implements CardCheck {
-
-    CardIO cardIO;
-    StringBuilder sb = new StringBuilder();
-
-    public CardHandler(CardIO cardIO) {
-        this.cardIO = cardIO;
-    }
+public class CardHandlerImpl implements CardHandler {
 
     @Override
     public MyStatus checkPAN(String cardNumber16DigitsInput) {
@@ -20,7 +12,6 @@ public class CardHandler implements CardCheck {
         if (!cardNumber16DigitsInput.matches("^\\d{16}$")) {
             status.setStatus(false);
             status.setMessage("Wrong card number\n");
-            sb.append(status.getMessage());
         } else {
             status.setStatus(true);
         }
@@ -32,7 +23,6 @@ public class CardHandler implements CardCheck {
         if(!realOrVirtualInput.equals("REAL") && !realOrVirtualInput.equals("VIRTUAL")) {
             status.setStatus(false);
             status.setMessage("Wrong answer to FormFactor question\n");
-            sb.append(status.getMessage());
         } else {
             status.setStatus(true);
         }
@@ -44,7 +34,6 @@ public class CardHandler implements CardCheck {
         if(!hasAChipInput.equals("yes") && !hasAChipInput.equals("no")) {
             status.setStatus(false);
             status.setMessage("Wrong answer to question about chip\n");
-            sb.append(status.getMessage());
         } else {
             status.setStatus(true);
         }
@@ -56,29 +45,33 @@ public class CardHandler implements CardCheck {
         if(!pinInput.matches("^\\d{4}$")) {
             status.setStatus(false);
             status.setMessage("Wrong type of pin\n");
-            sb.append(status.getMessage());
         } else {
             status.setStatus(true);
         }
         return status;
     }
-//    @Override
-//    public void showCardList() {
-//        cardIO.getAll();
-//    }
     @Override
-    public boolean checkCardDTO(CardDTO cardDTO){
-        checkPAN(cardDTO.getPan());
-        checkFormFactor(cardDTO.getFormFactor());
-        checkChip(cardDTO.getChip());
-        checkPin(cardDTO.getPinCode());
+    public MyStatus checkCardDTO(CardDTO cardDTO){
+        MyStatus checkCardStatus = new MyStatus();
+        StringBuilder sb = new StringBuilder();
 
-        if (!checkPAN(cardDTO.getPan()).isStatus() || !checkFormFactor(cardDTO.getFormFactor()).isStatus() ||
-                    !checkChip(cardDTO.getChip()).isStatus() || !checkPin(cardDTO.getPinCode()).isStatus()) {
-            System.out.println(sb);
-            return false;
+        MyStatus pan = checkPAN(cardDTO.getPan());
+        MyStatus formFactor = checkFormFactor(cardDTO.getFormFactor());
+        MyStatus chip = checkChip(cardDTO.getChip());
+        MyStatus pin = checkPin(cardDTO.getPinCode());
+
+        if (!pan.isStatus() || !formFactor.isStatus() ||
+                    !chip.isStatus() || !pin.isStatus()) {
+            sb.append(pan.getMessage());
+            sb.append(formFactor.getMessage());
+            sb.append(chip.getMessage());
+            sb.append(pin.getMessage());
+            String cvs = sb.toString().replaceAll("null", "");
+            System.out.println(cvs);
+            checkCardStatus.setStatus(false);
         } else {
-            return cardIO.createCardObject(cardDTO.getPan(), cardDTO.getFormFactor(), cardDTO.getChip(), cardDTO.getPinCode()).isStatus();
+            checkCardStatus.setStatus(true);
         }
+        return checkCardStatus;
     }
 }

@@ -3,6 +3,8 @@ package com.z8q.menu;
 import com.z8q.dto.CardDTO;
 import com.z8q.dto.ClientDTO;
 import com.z8q.interfaces.*;
+import com.z8q.models.Client;
+import com.z8q.propeties.MyStatus;
 
 import java.util.*;
 
@@ -10,14 +12,14 @@ public class MenuLevels implements MenuInterface {
 
     private final Scanner sc = new Scanner(System.in);
 
-    CardCheck cardCheck;
-    ClientCheck clientCheck;
+    CardHandler cardHandler;
+    ClientHandler clientHandler;
     CardIO cardIO;
     ClientIO clientIO;
 
-    public MenuLevels(ClientCheck clientCheck, CardCheck cardCheck, CardIO cardIO, ClientIO clientIO) {
-        this.clientCheck = clientCheck;
-        this.cardCheck = cardCheck;
+    public MenuLevels(ClientHandler clientHandler, CardHandler cardHandler, CardIO cardIO, ClientIO clientIO) {
+        this.clientHandler = clientHandler;
+        this.cardHandler = cardHandler;
         this.cardIO = cardIO;
         this.clientIO = clientIO;
     }
@@ -39,10 +41,11 @@ public class MenuLevels implements MenuInterface {
                     secondMenu();
                     break;
                 case "4":
-                    cardIO.getAll();
+                    System.out.println(cardIO.getAll());
                     break;
                 case "5":
-                    clientIO.getAll();
+                    System.out.println(clientIO.getAll());
+                    //System.out.println(clientIO.getAll());
                     break;
                 case "0":
                     System.exit(0);
@@ -87,8 +90,11 @@ public class MenuLevels implements MenuInterface {
         String pinInput = sc.nextLine();
 
         CardDTO cardDTO = new CardDTO(cardNumber16DigitsInput, realOrVirtualInput, hasAChipInput, pinInput);
-        if (!cardCheck.checkCardDTO(cardDTO)) {
+        if (!cardHandler.checkCardDTO(cardDTO).isStatus()) {
             startMenu();
+        } else {
+            cardIO.createCardObject(cardDTO.getPan(), cardDTO.getFormFactor(),
+                    cardDTO.getChip(), cardDTO.getPinCode());
         }
     }
     @Override
@@ -107,8 +113,11 @@ public class MenuLevels implements MenuInterface {
         String birthDateInput = sc.nextLine();
 
         ClientDTO clientDTO = new ClientDTO(lastnameInput, firstnameInput, middlenameInput, birthDateInput);
-        if (!clientCheck.checkClientDTO(clientDTO)) {
+        if (!clientHandler.checkClientDTO(clientDTO).isStatus()) {
             startMenu();
+        } else {
+            clientIO.createClientObject(clientDTO.getLastname(), clientDTO.getFirstname(),
+                    clientDTO.getMiddlename(), clientDTO.getDate());
         }
     }
     @Override
@@ -126,10 +135,10 @@ public class MenuLevels implements MenuInterface {
         String chooseSecondMenu = sc.nextLine();
         switch (chooseSecondMenu) {
             case "1":
-                cardIO.getAll();
+                System.out.println(cardIO.getAll());
                 break;
             case "2":
-                clientIO.getAll();
+                System.out.println(clientIO.getAll());
                 break;
             case "3":
                 linkCardToClientMenu();
@@ -147,8 +156,12 @@ public class MenuLevels implements MenuInterface {
         String cardId = sc.nextLine();
         System.out.println("Введите номер id человека, к которому хотите привязать карту");
         String clientId = sc.nextLine();
-        if (clientCheck.addCardToClient(cardId, clientId)) {
-            startMenu();
+        MyStatus linkCardToClient = clientIO.createClientObjectWithUpdatedCardList(cardId, clientId);
+        if (linkCardToClient.isStatus()) {
+            System.out.println("Карта привязана");
+        } else {
+            System.out.println("Карта не привязана");
         }
+        startMenu();
     }
 }

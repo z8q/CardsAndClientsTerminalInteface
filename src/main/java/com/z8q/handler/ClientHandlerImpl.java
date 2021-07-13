@@ -1,18 +1,16 @@
 package com.z8q.handler;
 
 import com.z8q.dto.ClientDTO;
-import com.z8q.interfaces.ClientCheck;
-import com.z8q.interfaces.ClientIO;
+import com.z8q.interfaces.ClientHandler;
 import com.z8q.propeties.MyStatus;
 
-public class ClientHandler implements ClientCheck {
+public class ClientHandlerImpl implements ClientHandler {
 
-    ClientIO clientIO;
-    StringBuilder sb = new StringBuilder();
-
-    public ClientHandler(ClientIO clientIO) {
-        this.clientIO = clientIO;
-    }
+//    ClientIO clientIO;
+//
+//    public ClientHandler(ClientIO clientIO) {
+//        this.clientIO = clientIO;
+//    }
 
     @Override
     public MyStatus checkLastName(String lastnameInput) {
@@ -20,7 +18,6 @@ public class ClientHandler implements ClientCheck {
         if (!lastnameInput.matches("^[a-zA-Zа-яА-я]+$")) {
             status.setStatus(false);
             status.setMessage("Wrong lastname\n");
-            sb.append(status.getMessage());
         } else {
             status.setStatus(true);
         }
@@ -32,7 +29,6 @@ public class ClientHandler implements ClientCheck {
         if (!firstNameInput.matches("^[a-zA-Zа-яА-я]+$")) {
             status.setStatus(false);
             status.setMessage("Wrong firstname\n");
-            sb.append(status.getMessage());
         } else {
             status.setStatus(true);
         }
@@ -44,7 +40,6 @@ public class ClientHandler implements ClientCheck {
         if (!middlenameInput.matches("^[a-zA-Zа-яА-я]+$")) {
             status.setStatus(false);
             status.setMessage("Wrong middlename\n");
-            sb.append(status.getMessage());
         } else {
             status.setStatus(true);
         }
@@ -56,7 +51,6 @@ public class ClientHandler implements ClientCheck {
         if (!birthDateInput.matches("^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]))\\1|(?:(?:29|30)(\\/|-|\\.)(?:0?[1,3-9]|1[0-2])\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:29(\\/|-|\\.)0?2\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\\d|2[0-8])(\\/|-|\\.)(?:(?:0?[1-9])|(?:1[0-2]))\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$")) {
             status.setStatus(false);
             status.setMessage("Wrong birth date\n");
-            sb.append(status.getMessage());
         } else {
             status.setStatus(true);
         }
@@ -74,26 +68,22 @@ public class ClientHandler implements ClientCheck {
 //            e.printStackTrace();
 //        }
     }
-
 //    @Override
-//    public void showClientList() {
-//        clientIO.getAll();
+//    public MyStatus addCardToClient(String cardId, String clientId) {
+//        MyStatus statusLinkCardToClient = new MyStatus();
+//        if (!clientIO.createClientObjectWithUpdatedCardList(cardId, clientId)) {
+//            statusLinkCardToClient.setStatus(false);
+//            System.out.println("Card not linked");
+//        } else {
+//            statusLinkCardToClient.setStatus(true);
+//        }
+//        return statusLinkCardToClient;
 //    }
-
     @Override
-    public boolean addCardToClient(String cardId, String clientId) {
-        boolean statusLinkCardToClient;
-        if (!clientIO.createClientObjectWithUpdatedCardList(cardId, clientId)) {
-            statusLinkCardToClient = false;
-            System.out.println("Card not linked");
-        } else {
-            statusLinkCardToClient = true;
-        }
-        return statusLinkCardToClient;
-    }
+    public MyStatus checkClientDTO(ClientDTO clientDTO){
+        MyStatus checkClientStatus = new MyStatus();
+        StringBuilder sb = new StringBuilder();
 
-    @Override
-    public boolean checkClientDTO(ClientDTO clientDTO){
         MyStatus lastname = checkLastName(clientDTO.getLastname());
         MyStatus firstname = checkFirstName(clientDTO.getFirstname());
         MyStatus middlename = checkMiddleName(clientDTO.getMiddlename());
@@ -101,11 +91,16 @@ public class ClientHandler implements ClientCheck {
 
         if (!lastname.isStatus() || !firstname.isStatus() ||
                 !middlename.isStatus() || !birthdate.isStatus()) {
-            System.out.println(sb);
-            return false;
+            sb.append(lastname.getMessage());
+            sb.append(firstname.getMessage());
+            sb.append(middlename.getMessage());
+            sb.append(birthdate.getMessage());
+            String cvs = sb.toString().replaceAll("null", "");
+            System.out.println(cvs);
+            checkClientStatus.setStatus(false);
         } else {
-            return clientIO.createClientObject(clientDTO.getLastname(), clientDTO.getFirstname(),
-                    clientDTO.getMiddlename(), clientDTO.getDate()).isStatus();
+            checkClientStatus.setStatus(true);
         }
+        return checkClientStatus;
     }
 }
