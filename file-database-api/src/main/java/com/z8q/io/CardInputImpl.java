@@ -98,42 +98,19 @@ public class CardInputImpl implements CardInput, CardOutput {
     @Override
     public MyStatus createCardObject(CardDTO cardDTO) {
         MyStatus status = new MyStatus();
-        Long cardId;
-        try {
-            Scanner sc = new Scanner(new File(CARDPATH));
-            String contentCards = null;
-            while (sc.hasNext()) {
-                contentCards = sc.nextLine();
-            }
-            Gson gsonCards = new Gson();
-            List<Card> cardArray = gsonCards.fromJson(contentCards, ArrayList.class);
-            if (cardArray == null) {
-                cardId = 1L;
-            } else {
-                cardId = (long) (cardArray.size() + 1);
-            }
-        } catch (IOException e) {
-            LOGGER.error("Error while creating a Card");
-            e.printStackTrace();
-            status.setStatus(false);
-            return status;
-        }
-        FormFactor formEnum;
-        if (cardDTO.getFormFactor().equals("REAL")) {
-            formEnum = FormFactor.REAL;
-        } else {
-            formEnum = FormFactor.VIRTUAL;
-        }
-        boolean hasChip = false;
-        if (cardDTO.getChip().equals("yes")) {
-            hasChip = true;
-        }
+        Gson gsonCards = new Gson();
+
+        List<Card> cardArray = fromJSONToList(gsonCards);
+        Long cardId = defineCardId(cardArray);
+        FormFactor formFactor = defineFormFactor(cardDTO);
+        boolean hasChip = defineChip(cardDTO);
+
         Card card = new Card.Builder()
                 .withId(cardId)
                 .withCardNumberFirstFourDigits(cardDTO.getPan().substring(0, 4))
                 .withCardNumberSecondEightDigits(cardDTO.getPan().substring(4, 12))
                 .withCardNumberThirdFourDigits(cardDTO.getPan().substring(12, 16))
-                .withFormFactor(formEnum)
+                .withFormFactor(formFactor)
                 .withHasAChip(hasChip)
                 .withPinCode(cardDTO.getPinCode())
                 .build();
@@ -142,7 +119,45 @@ public class CardInputImpl implements CardInput, CardOutput {
             System.out.println("Карта сохранена \n");
         } else {
             status.setStatus(false);
+            status.setMessage("Error on createCardObject stage");
+            LOGGER.error("Error on createCardObject stage, card id {}", cardId);
         }
         return status;
+    }
+    public List<Card> fromJSONToList(Gson gsonCards) {
+        Scanner sc = null;
+        try {
+            sc = new Scanner(new File(CARDPATH));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            LOGGER.error("Can't create a cardlist while reading JSON");
+        }
+        String contentCards = null;
+        while (sc.hasNext()) {
+            contentCards = sc.nextLine();
+        }
+        List<Card> cardArray = gsonCards.fromJson(contentCards, ArrayList.class);
+        return cardArray;
+    }
+    public Long defineCardId(List<Card> cardArray) {
+        Long cardIdTemp;
+        if (cardArray == null) {
+            cardIdTemp = 1L;
+        } else {
+            cardIdTemp = (long) (cardArray.size() + 1);
+        }
+        return cardIdTemp;
+    }
+    public FormFactor defineFormFactor(CardDTO cardDTO) {
+        FormFactor formFactorTemp;
+        if (cardDTO.getFormFactor().equals("REAL")) {
+            formFactorTemp = FormFactor.REAL;
+        } else {
+            formFactorTemp = FormFactor.VIRTUAL;
+        }
+        return formFactorTemp;
+    }
+    public boolean defineChip(CardDTO cardDTO) {
+        return cardDTO.getChip().equals("yes");
     }
 }
