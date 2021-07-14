@@ -4,6 +4,7 @@ import com.z8q.dto.CardDTO;
 import com.z8q.dto.ClientDTO;
 import com.z8q.interfaces.*;
 import com.z8q.model.Card;
+import com.z8q.properties.FormFactor;
 import com.z8q.properties.MyStatus;
 
 import java.util.*;
@@ -55,7 +56,7 @@ public class MenuLevels {
                     }
                     break;
                 case "0":
-                    System.exit(0);
+                    return;
                 default:
                     System.out.println("\nВыберите существующий пункт меню\n");
                     break;
@@ -86,18 +87,24 @@ public class MenuLevels {
         System.out.println("Введите номер карты - 16 цифр");
         String cardNumber16DigitsInput = sc.nextLine();
 
-        System.out.println("Введите вид карты - REAL/VIRTUAL");
+        System.out.println("Введите вид карты\nДля выбора обычной карты нажмите - 1\nДля выбора виртуальной карты нажмите - 2");
         String realOrVirtualInput = sc.nextLine();
 
-        System.out.println("Добавить чип в карту? - yes/no");
-        String hasAChipInput = sc.nextLine();
+        String hasAChipInput;
+        if (FormFactor.VIRTUAL.name().equals(realOrVirtualInput)) {
+            hasAChipInput = "no";
+        } else {
+            System.out.println("Добавить чип в карту? - yes/no");
+            hasAChipInput = sc.nextLine();
+        }
 
         System.out.println("Введите пин-код - 4 цифры");
         String pinInput = sc.nextLine();
 
         CardDTO cardDTO = new CardDTO(cardNumber16DigitsInput, realOrVirtualInput, hasAChipInput, pinInput);
-        if (!cardHandler.checkCardDTO(cardDTO).isStatus()) {
-            startMenu();
+        MyStatus operationStatus = cardHandler.checkCardDTO(cardDTO);
+        if (!operationStatus.isStatus()) {
+            System.out.println(operationStatus.getMessage());
         }
     }
 
@@ -118,7 +125,6 @@ public class MenuLevels {
         ClientDTO clientDTO = new ClientDTO(lastnameInput, firstnameInput, middlenameInput, birthDateInput);
         MyStatus checkClient = clientHandler.checkClientDTO(clientDTO);
         if (!checkClient.isStatus()) {
-            startMenu();
             System.out.println(checkClient.getMessage());
 
         }
@@ -135,6 +141,6 @@ public class MenuLevels {
         } else {
             System.out.println("Карта не привязана");
         }
-        startMenu();
+
     }
 }

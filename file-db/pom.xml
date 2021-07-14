@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>file-database</artifactId>
+    <artifactId>file-db</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -37,7 +37,7 @@
 
         <dependency>
             <groupId>com.z8q</groupId>
-            <artifactId>ioInterfaces</artifactId>
+            <artifactId>db-api</artifactId>
             <version>${project.version}</version>
         </dependency>
 

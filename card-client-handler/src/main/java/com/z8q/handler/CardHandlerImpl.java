@@ -18,7 +18,7 @@ public class CardHandlerImpl implements CardHandler {
         MyStatus status = new MyStatus();
         if (!cardNumber16DigitsInput.matches("^\\d{16}$")) {
             status.setStatus(false);
-            status.setMessage("Wrong card number\n");
+            status.setMessage("Card number contains invalid characters\n");
         } else {
             status.setStatus(true);
         }
@@ -27,9 +27,9 @@ public class CardHandlerImpl implements CardHandler {
     @Override
     public MyStatus checkFormFactor(String realOrVirtualInput){
         MyStatus status = new MyStatus();
-        if(!realOrVirtualInput.equals("REAL") && !realOrVirtualInput.equals("VIRTUAL")) {
+        if(!realOrVirtualInput.equals("1") && !realOrVirtualInput.equals("2")) {
             status.setStatus(false);
-            status.setMessage("Wrong answer to FormFactor question\n");
+            status.setMessage("Answer to FormFactor question contains invalid characters\n");
         } else {
             status.setStatus(true);
         }
@@ -40,7 +40,7 @@ public class CardHandlerImpl implements CardHandler {
         MyStatus status = new MyStatus();
         if(!hasAChipInput.equals("yes") && !hasAChipInput.equals("no")) {
             status.setStatus(false);
-            status.setMessage("Wrong answer to question about chip\n");
+            status.setMessage("Answer to chip question contains invalid characters\n");
         } else {
             status.setStatus(true);
         }
@@ -51,7 +51,7 @@ public class CardHandlerImpl implements CardHandler {
         MyStatus status = new MyStatus();
         if(!pinInput.matches("^\\d{4}$")) {
             status.setStatus(false);
-            status.setMessage("Wrong type of pin\n");
+            status.setMessage("PIN contains invalid characters\n");
         } else {
             status.setStatus(true);
         }
@@ -74,7 +74,6 @@ public class CardHandlerImpl implements CardHandler {
             sb.append(chip.getMessage());
             sb.append(pin.getMessage());
             String cvs = sb.toString().replaceAll("null", "");
-            System.out.println(cvs);
             checkCardStatus.setStatus(false);
             checkCardStatus.setMessage(cvs);
         } else {

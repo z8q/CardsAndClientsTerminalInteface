@@ -10,16 +10,20 @@ import com.z8q.io.ClientInputImpl;
 public class Application {
     public static void main(String[] args) {
 
-        ClientOutput clientOutput = new ClientInputImpl();
-        ClientInput clientInput = new ClientInputImpl();
-        ClientHandler clientHandler = new ClientHandlerImpl(clientInput);
+        //-------------------------Подлежит замене-------------------------------
+        ClientInputImpl clientOutput = new ClientInputImpl();
+        CardInputImpl cardOutput = new CardInputImpl();
+        //-------------------------Подлежит замене-------------------------------
 
-        CardOutput cardOutput = new CardInputImpl();
-        CardInput cardInput = new CardInputImpl();
-        CardHandler cardHandler = new CardHandlerImpl(cardInput);
+
+        //---------------------------Не менять-----------------------------------
+        ClientHandler clientHandler = new ClientHandlerImpl(clientOutput);
+        CardHandler cardHandler = new CardHandlerImpl(cardOutput);
 
         MenuLevels menuLevels = new MenuLevels(clientHandler, cardHandler, cardOutput, clientOutput);
         menuLevels.startMenu();
 
+        System.out.println("Program is stopped");
+        //---------------------------Не менять-----------------------------------
     }
 }
