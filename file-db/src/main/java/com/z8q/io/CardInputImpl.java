@@ -46,7 +46,6 @@ public class CardInputImpl implements CardInput, CardOutput {
             }
         } catch (IOException e) {
             LOGGER.error("Wrong path to file or Wrong JSON syntax", e);
-
         }
         return printCardList;
     }
@@ -116,6 +115,7 @@ public class CardInputImpl implements CardInput, CardOutput {
                 .withHasAChip(hasChip)
                 .withPinCode(cardDTO.getPinCode())
                 .build();
+        // Скрытый вызов метода
         if(save(card).isStatus()) {
             status.setStatus(true);
             System.out.println("Карта сохранена \n");
