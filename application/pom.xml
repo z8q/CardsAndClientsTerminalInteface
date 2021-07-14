@@ -19,19 +19,19 @@
     <dependencies>
         <dependency>
             <groupId>com.z8q</groupId>
-            <artifactId>card-client-hanler</artifactId>
+            <artifactId>card-client-handler</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.z8q</groupId>
-            <artifactId>file-database</artifactId>
+            <artifactId>file-db</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.z8q</groupId>
-            <artifactId>ioInterfaces</artifactId>
+            <artifactId>db-api</artifactId>
             <version>${project.version}</version>
         </dependency>
 

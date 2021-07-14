@@ -10,14 +10,14 @@
     <version>1.0-SNAPSHOT</version>
 
     <modules>
-        <module>file-database</module>
-        <module>card-client-hanlder</module>
+        <module>file-db</module>
+        <module>card-client-handler</module>
         <module>menu</module>
         <module>dto</module>
         <module>model</module>
         <module>common</module>
         <module>application</module>
-        <module>ioInterfaces</module>
+        <module>db-api</module>
     </modules>
 
     <properties>

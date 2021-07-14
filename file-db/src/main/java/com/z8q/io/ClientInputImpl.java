@@ -2,6 +2,7 @@ package com.z8q.io;
 
 import com.google.gson.Gson;
 import com.z8q.dto.ClientDTO;
+import com.z8q.interfaces.CardInput;
 import com.z8q.interfaces.ClientInput;
 import com.z8q.interfaces.ClientOutput;
 import com.z8q.model.Card;
@@ -18,8 +19,11 @@ import java.util.*;
 public class ClientInputImpl implements ClientInput, ClientOutput {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final String CLIENTPATH = "file-database-api/src/main/resources/ClientList.txt";
-    private static final String CARDPATH = "file-database-api/src/main/resources/CardList.txt";
+    private static final String CLIENTPATH = "file-db/src/main/resources/ClientList.txt";
+    private static final String CARDPATH = "file-db/src/main/resources/CardList.txt";
+    private static final SimpleDateFormat DATETEMP = new SimpleDateFormat("dd/MM/yyyy");
+
+//    private Provider connectProvider = ProviderFactory.getProvider();
 
     @Override
     public Client getClientById(Long clientIndex) {
@@ -66,14 +70,13 @@ public class ClientInputImpl implements ClientInput, ClientOutput {
             status.setStatus(true);
             return status;
         } catch (IOException e) {
-            LOGGER.error("Error was occurred while saving Client with id {}", client.getId());
-            e.printStackTrace();
+            LOGGER.error("Error was occurred while saving Client with id {}", client.getId(), e);
             status.setStatus(false);
             status.setMessage("Error on Client save stage");
             return status;
         }
     }
-    public List<Client> saveTxtIntoList(Gson gsonClients) throws FileNotFoundException {
+    private List<Client> saveTxtIntoList(Gson gsonClients) throws FileNotFoundException {
         Scanner sc = new Scanner(new File(CLIENTPATH));
         List<Client> clientArray = null;
         while(sc.hasNext()) {
@@ -82,7 +85,7 @@ public class ClientInputImpl implements ClientInput, ClientOutput {
         }
         return clientArray;
     }
-    public String addElementToList(List<Client> clientArray, Client client, Gson gsonClients) {
+    private String addElementToList(List<Client> clientArray, Client client, Gson gsonClients) {
         String contentClientsNew;
         if (clientArray != null) {
             clientArray.add(client);
@@ -99,28 +102,23 @@ public class ClientInputImpl implements ClientInput, ClientOutput {
         MyStatus status = new MyStatus();
         try {
             LOGGER.info("Card with id {} was linked to Client with id {} and added to file", cardId, client.getId());
+            Gson gson = new Gson();
 
-            Scanner sc = new Scanner(new File(CLIENTPATH));
-            String contentClients = null;
-            while (sc.hasNext()) {
-                contentClients = sc.nextLine();
-            }
-            Gson gsonCards = new Gson();
-            List<Client> clientArray = gsonCards.fromJson(contentClients, ArrayList.class);
-            if (clientArray != null) {
-                clientArray.set((client.getId().intValue()-1), client);
-                String contentClientsNew = gsonCards.toJson(clientArray);
-                BufferedWriter writer = new BufferedWriter(new FileWriter(CLIENTPATH));
-                writer.write(contentClientsNew);
-                writer.close();
+            List<Client> clientList = fromJSONToList(gson);
+
+            String contentClientsNew;
+            if (clientList != null) {
+                clientList.set((client.getId().intValue()-1), client);
+                contentClientsNew = gson.toJson(clientList);
             } else {
                 List<Client> tempClientArray = new ArrayList<>();
                 tempClientArray.add(client);
-                String humansString = gsonCards.toJson(tempClientArray);
-                BufferedWriter writer = new BufferedWriter(new FileWriter(CLIENTPATH));
-                writer.write(humansString);
-                writer.close();
+                contentClientsNew = gson.toJson(tempClientArray);
             }
+            BufferedWriter writer = new BufferedWriter(new FileWriter(CLIENTPATH));
+            writer.write(contentClientsNew);
+            writer.close();
+
             status.setStatus(true);
             return status;
         } catch (IOException e) {
@@ -154,14 +152,15 @@ public class ClientInputImpl implements ClientInput, ClientOutput {
             System.out.println("Клиент сохранен \n");
         } else {
             status.setStatus(false);
+            status.setMessage("Клиент не сохранен");
         }
         return status;
     }
 
-    public Date convertStringToDate(ClientDTO clientDTO) {
+    private Date convertStringToDate(ClientDTO clientDTO) {
         Date dateTemp = null;
         try {
-            dateTemp = new SimpleDateFormat("dd/MM/yyyy").parse(clientDTO.getDate());
+            dateTemp = DATETEMP.parse(clientDTO.getDate());
         } catch (ParseException e) {
             LOGGER.error("Date format error");
             e.printStackTrace();
@@ -169,7 +168,7 @@ public class ClientInputImpl implements ClientInput, ClientOutput {
         return dateTemp;
     }
 
-    public List<Client> fromJSONToList(Gson gsonClients) {
+    private List<Client> fromJSONToList(Gson gson) {
         String contentClients = null;
         try {
             Scanner sc = new Scanner(new File(CLIENTPATH));
@@ -177,13 +176,13 @@ public class ClientInputImpl implements ClientInput, ClientOutput {
                 contentClients = sc.nextLine();
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
             LOGGER.error("Error while reading file ClientList.txt");
+            e.printStackTrace();
         }
-        return gsonClients.fromJson(contentClients, ArrayList.class);
+        return gson.fromJson(contentClients, ArrayList.class);
     }
 
-    public Long defineClientId(List<Client> clientArray) {
+    private Long defineClientId(List<Client> clientArray) {
         Long clientIdTemp;
         if (clientArray == null) {
             clientIdTemp = 1L;
@@ -195,6 +194,45 @@ public class ClientInputImpl implements ClientInput, ClientOutput {
     @Override
     public MyStatus createClientObjectWithUpdatedCardList(String cardId, String clientId) {
         MyStatus status = new MyStatus();
+        Gson gson = new Gson();
+
+        Client[] clientArray = fromJSONToArray(gson);
+        Card[] cardArray = fromJSONToArrayCard(gson);
+
+        if (Integer.parseInt(clientId) <= clientArray.length) {
+            if (Integer.parseInt((cardId)) <= cardArray.length) {
+                List<String> listOfCards = clientArray[Integer.parseInt(clientId) - 1].getClientCards();
+
+                for (Card card : cardArray) {
+                    if (card.getId().intValue() == (Integer.parseInt(cardId))) {
+                        listOfCards.add(Long.toString(cardArray[Integer.parseInt(cardId) - 1].getId()));
+
+                        Client clientAddElementToList = new Client.Builder()
+                                .withId(clientArray[Integer.parseInt(clientId) - 1].getId())
+                                .withLastName(clientArray[Integer.parseInt(clientId) - 1].getLastName())
+                                .withFirstName(clientArray[Integer.parseInt(clientId) - 1].getFirstName())
+                                .withMiddleName(clientArray[Integer.parseInt(clientId) - 1].getMiddleName())
+                                .withBirthDate(clientArray[Integer.parseInt(clientId) - 1].getBirthDate())
+                                .withClientCards(listOfCards)
+                                .build();
+
+                        linkCardToClient(clientAddElementToList, card.getId().intValue());
+                        status.setStatus(true);
+                    }
+                }
+            } else {
+                LOGGER.warn("There is no card with id {}", cardId);
+                status.setStatus(false);
+            }
+        } else {
+                LOGGER.warn("There is no client with id {}", clientId);
+                status.setStatus(false);
+            }
+        return status;
+    }
+
+    private Client[] fromJSONToArray(Gson gson) {
+        Client[] clientArray = new Client[0];
         try {
             Scanner sc = new Scanner(new File(CLIENTPATH));
             String content = null;
@@ -202,47 +240,26 @@ public class ClientInputImpl implements ClientInput, ClientOutput {
                 content = sc.nextLine();
             }
             Gson gsonClients = new Gson();
-            Client[] clientArray = gsonClients.fromJson(content, Client[].class);
+            clientArray = gsonClients.fromJson(content, Client[].class);
 
-            Scanner scCard = new Scanner(new File(CARDPATH));
-            String contentCards = scCard.nextLine();
-            Gson gsonCards = new Gson();
-            Card[] cardArray = gsonCards.fromJson(contentCards, Card[].class);
-
-            if (Integer.parseInt(clientId) <= clientArray.length) {
-                if (Integer.parseInt((cardId)) <= cardArray.length) {
-                    List<String> listOfCards = clientArray[Integer.parseInt(clientId) - 1].getClientCards();
-
-                    for (Card card : cardArray) {
-                        if (card.getId().intValue() == (Integer.parseInt(cardId))) {
-                            listOfCards.add(Long.toString(cardArray[Integer.parseInt(cardId) - 1].getId()));
-
-                            Client clientAddElementToList = new Client.Builder()
-                                    .withId(clientArray[Integer.parseInt(clientId) - 1].getId())
-                                    .withLastName(clientArray[Integer.parseInt(clientId) - 1].getLastName())
-                                    .withFirstName(clientArray[Integer.parseInt(clientId) - 1].getFirstName())
-                                    .withMiddleName(clientArray[Integer.parseInt(clientId) - 1].getMiddleName())
-                                    .withBirthDate(clientArray[Integer.parseInt(clientId) - 1].getBirthDate())
-                                    .withClientCards(listOfCards)
-                                    .build();
-
-                            linkCardToClient(clientAddElementToList, card.getId().intValue());
-                            status.setStatus(true);
-                        }
-                    }
-                } else {
-                    LOGGER.warn("There is no card with id {}", cardId);
-                    status.setStatus(false);
-                }
-            } else {
-                LOGGER.warn("There is no client with id {}", clientId);
-                status.setStatus(false);
-            }
-        } catch(IOException e){
-            LOGGER.error("Intput error while linking card to client");
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
-            status.setStatus(false);
         }
-        return status;
+        return clientArray;
+    }
+
+    private Card[] fromJSONToArrayCard(Gson gson) {
+        Card[] cardArray = new Card[0];
+        try {
+            Scanner sc = new Scanner(new File(CARDPATH));
+            String content = null;
+            while (sc.hasNext()) {
+                content = sc.nextLine();
+            }
+            cardArray = gson.fromJson(content, Card[].class);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return cardArray;
     }
 }

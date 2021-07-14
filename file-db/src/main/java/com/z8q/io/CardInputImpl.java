@@ -17,8 +17,8 @@ import java.util.Scanner;
 
 public class CardInputImpl implements CardInput, CardOutput {
 
-    private static final Logger LOGGER = LogManager.getLogger();
-    private static final String CARDPATH = "file-database-api/src/main/resources/CardList.txt";
+    private static final Logger LOGGER = LogManager.getLogger(CardInputImpl.class);
+    private static final String CARDPATH = "file-db/src/main/resources/CardList.txt";
 
     @Override
     public Card getCardById(Long cardIndex) {
@@ -45,8 +45,8 @@ public class CardInputImpl implements CardInput, CardOutput {
                 printCardList = gson.fromJson(content, ArrayList.class);
             }
         } catch (IOException e) {
-            LOGGER.error("Wrong path to file or Wrong JSON syntax");
-            e.printStackTrace();
+            LOGGER.error("Wrong path to file or Wrong JSON syntax", e);
+
         }
         return printCardList;
     }
@@ -66,14 +66,15 @@ public class CardInputImpl implements CardInput, CardOutput {
             status.setStatus(true);
             return status;
         } catch (IOException e) {
-            LOGGER.error("Error was occurred while saving Client with id {}", card.getId());
-            e.printStackTrace();
+            LOGGER.error("Error was occurred while saving Client with id {}", card.getId(), e);
+
             status.setStatus(false);
-            status.setMessage("Error on Card save stage");
+            status.setMessage("Error on Card save stage" + e.getMessage());
             return status;
         }
     }
-    public List<Card> saveTxtIntoList(Gson gsonCards) throws FileNotFoundException {
+
+    private List<Card> saveTxtIntoList(Gson gsonCards) throws FileNotFoundException {
         Scanner sc = new Scanner(new File(CARDPATH));
         List<Card> cardArray = null;
         while(sc.hasNext()) {
@@ -82,7 +83,8 @@ public class CardInputImpl implements CardInput, CardOutput {
         }
         return cardArray;
     }
-    public String addElementToList(List<Card> cardArray, Card card, Gson gsonCards) {
+
+    private String addElementToList(List<Card> cardArray, Card card, Gson gsonCards) {
         String contentCardsNew;
         if (cardArray != null) {
             cardArray.add(card);
@@ -124,22 +126,23 @@ public class CardInputImpl implements CardInput, CardOutput {
         }
         return status;
     }
-    public List<Card> fromJSONToList(Gson gsonCards) {
+
+    private List<Card> fromJSONToList(Gson gsonCards) {
         Scanner sc = null;
         try {
             sc = new Scanner(new File(CARDPATH));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+
             LOGGER.error("Can't create a cardlist while reading JSON");
         }
         String contentCards = null;
         while (sc.hasNext()) {
             contentCards = sc.nextLine();
         }
-        List<Card> cardArray = gsonCards.fromJson(contentCards, ArrayList.class);
-        return cardArray;
+        return gsonCards.fromJson(contentCards, ArrayList.class);
     }
-    public Long defineCardId(List<Card> cardArray) {
+
+    private Long defineCardId(List<Card> cardArray) {
         Long cardIdTemp;
         if (cardArray == null) {
             cardIdTemp = 1L;
@@ -148,16 +151,18 @@ public class CardInputImpl implements CardInput, CardOutput {
         }
         return cardIdTemp;
     }
-    public FormFactor defineFormFactor(CardDTO cardDTO) {
+
+    private FormFactor defineFormFactor(CardDTO cardDTO) {
         FormFactor formFactorTemp;
-        if (cardDTO.getFormFactor().equals("REAL")) {
+        if (cardDTO.getFormFactor().equals("1")) {
             formFactorTemp = FormFactor.REAL;
         } else {
             formFactorTemp = FormFactor.VIRTUAL;
         }
         return formFactorTemp;
     }
-    public boolean defineChip(CardDTO cardDTO) {
+
+    private boolean defineChip(CardDTO cardDTO) {
         return cardDTO.getChip().equals("yes");
     }
 }

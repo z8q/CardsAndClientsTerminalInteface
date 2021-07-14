@@ -1,0 +1,9 @@
+2021-07-14 10:00:12,162 INFO com.z8q.io.ClientInputImpl Card with id 3 was linked to Client with id 2 and added to file
+2021-07-14 10:15:02,606 INFO com.z8q.io.CardInputImpl Card with id 1 was added to file
+2021-07-14 10:15:22,275 INFO com.z8q.io.ClientInputImpl Client with id 1 was added to file
+2021-07-14 10:15:36,411 INFO com.z8q.io.ClientInputImpl Card with id 1 was linked to Client with id 1 and added to file
+2021-07-14 10:19:01,493 INFO com.z8q.io.CardInputImpl Card with id 2 was added to file
+2021-07-14 10:19:29,083 INFO com.z8q.io.CardInputImpl Card with id 3 was added to file
+2021-07-14 10:24:23,492 INFO com.z8q.io.CardInputImpl Card with id 4 was added to file
+2021-07-14 10:24:41,753 INFO com.z8q.io.CardInputImpl Card with id 5 was added to file
+2021-07-14 11:20:07,462 ERROR com.z8q.io.CardInputImpl Wrong path to file or Wrong JSON syntax
