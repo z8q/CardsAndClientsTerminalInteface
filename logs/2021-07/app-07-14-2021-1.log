@@ -7,3 +7,8 @@
 2021-07-14 10:24:23,492 INFO com.z8q.io.CardInputImpl Card with id 4 was added to file
 2021-07-14 10:24:41,753 INFO com.z8q.io.CardInputImpl Card with id 5 was added to file
 2021-07-14 11:20:07,462 ERROR com.z8q.io.CardInputImpl Wrong path to file or Wrong JSON syntax
+2021-07-14 17:10:48,018 INFO com.z8q.postgredb.CardsAndClientsTablesCreation Table 30 is created
+2021-07-14 17:12:08,984 INFO com.z8q.postgredb.CardsAndClientsTablesCreation Table 30 is created
+2021-07-14 17:12:09,042 INFO com.z8q.postgredb.CardsAndClientsTablesCreation Table 30 is created
+2021-07-14 17:15:19,752 INFO com.z8q.postgredb.CardsAndClientsTablesCreation Table Cards.sql is created
+2021-07-14 17:15:19,810 INFO com.z8q.postgredb.CardsAndClientsTablesCreation Table Clients.sql is created

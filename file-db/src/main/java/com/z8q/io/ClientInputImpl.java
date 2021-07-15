@@ -2,7 +2,6 @@ package com.z8q.io;
 
 import com.google.gson.Gson;
 import com.z8q.dto.ClientDTO;
-import com.z8q.interfaces.CardInput;
 import com.z8q.interfaces.ClientInput;
 import com.z8q.interfaces.ClientOutput;
 import com.z8q.model.Card;
@@ -98,7 +97,7 @@ public class ClientInputImpl implements ClientInput, ClientOutput {
         return contentClientsNew;
     }
     @Override
-    public MyStatus linkCardToClient(Client client, int cardId) {
+    public void linkCardToClient(Client client, int cardId) {
         MyStatus status = new MyStatus();
         try {
             LOGGER.info("Card with id {} was linked to Client with id {} and added to file", cardId, client.getId());
@@ -120,18 +119,16 @@ public class ClientInputImpl implements ClientInput, ClientOutput {
             writer.close();
 
             status.setStatus(true);
-            return status;
         } catch (IOException e) {
             LOGGER.error("Card with id {} wasn't linked to Client with id {}", cardId, client.getId());
             e.printStackTrace();
             status.setStatus(false);
             status.setMessage("Error appears on ClientWriteOperations - linkCardToClient stage");
-            return status;
         }
     }
 
     @Override
-    public MyStatus createClientObject(ClientDTO clientDTO) {
+    public void createClientObject(ClientDTO clientDTO) {
         MyStatus status = new MyStatus();
         Gson gsonClients = new Gson();
 
@@ -154,7 +151,6 @@ public class ClientInputImpl implements ClientInput, ClientOutput {
             status.setStatus(false);
             status.setMessage("Клиент не сохранен");
         }
-        return status;
     }
 
     private Date convertStringToDate(ClientDTO clientDTO) {

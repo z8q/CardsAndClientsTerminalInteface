@@ -2,17 +2,23 @@ package com.z8q;
 
 import com.z8q.handler.CardHandlerImpl;
 import com.z8q.handler.ClientHandlerImpl;
+import com.z8q.impl.PostgreCardInputImpl;
+import com.z8q.impl.PostgreClientInputImpl;
 import com.z8q.interfaces.*;
 import com.z8q.io.CardInputImpl;
 import com.z8q.menu.MenuLevels;
 import com.z8q.io.ClientInputImpl;
+import com.z8q.postgredb.CardsAndClientsTablesCreation;
+
+import java.sql.SQLException;
 
 public class Application {
     public static void main(String[] args) {
 
+
         //-------------------------Подлежит замене-------------------------------
-        ClientInputImpl clientOutput = new ClientInputImpl();
-        CardInputImpl cardOutput = new CardInputImpl();
+        PostgreClientInputImpl clientOutput = new PostgreClientInputImpl();
+        PostgreCardInputImpl cardOutput = new PostgreCardInputImpl();
         //-------------------------Подлежит замене-------------------------------
 
 
