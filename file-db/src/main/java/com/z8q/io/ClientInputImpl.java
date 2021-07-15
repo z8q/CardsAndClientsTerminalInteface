@@ -96,8 +96,8 @@ public class ClientInputImpl implements ClientInput, ClientOutput {
         }
         return contentClientsNew;
     }
-    @Override
-    public void linkCardToClient(Client client, int cardId) {
+
+    private void linkCardToClient(Client client, int cardId) {
         MyStatus status = new MyStatus();
         try {
             LOGGER.info("Card with id {} was linked to Client with id {} and added to file", cardId, client.getId());

@@ -12,10 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,45 +87,11 @@ public class PostgreCardInputImpl implements CardInput, CardOutput {
        return cardList;
     }
 
-        @Override
-    public MyStatus save(Card card) {
-        MyStatus status = new MyStatus();
-
-        try (Connection connection = ConnectFactory.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_CARD))
-        {
-            LOGGER.info("Data was inserted into cards table");
-
-            preparedStatement.setString(1, card.getCardNumberFirstFourDigits() +
-                    card.getCardNumberSecondEightDigits() +
-                    card.getCardNumberThirdFourDigits());
-            preparedStatement.setString(2, String.valueOf(card.getFormFactor()));
-            preparedStatement.setBoolean(3, card.isHasAChip());
-            preparedStatement.setString(4, card.getPinCode());
-
-            preparedStatement.executeUpdate();
-            status.setStatus(true);
-        } catch (SQLException e) {
-            LOGGER.error("Data wasn't inserted into cards table");
-            status.setStatus(false);
-        }
-        return status;
-    }
-
     @Override
     public MyStatus createCardObject(CardDTO cardDTO) {
-        CardsAndClientsTablesCreation cardsTable = new CardsAndClientsTablesCreation();
         MyStatus status = new MyStatus();
 
-        try {
-            cardsTable.createTable(PATH_TO_CREATE_CARDS_TABLE);
-        } catch (SQLException throwables) {
-            LOGGER.warn("Table {} already exists",
-                    PATH_TO_CREATE_CARDS_TABLE.substring(PATH_TO_CREATE_CARDS_TABLE.lastIndexOf("/")+1));
-        } catch (IOException e) {
-            LOGGER.error("Table {} wasn't created",
-                    PATH_TO_CREATE_CARDS_TABLE.substring(PATH_TO_CREATE_CARDS_TABLE.lastIndexOf("/")+1));
-        }
+        startCreationOfCardTableIfNotExists();
 
         FormFactor formFactor = defineFormFactor(cardDTO);
         boolean hasChip = defineChip(cardDTO);
@@ -153,6 +116,28 @@ public class PostgreCardInputImpl implements CardInput, CardOutput {
         }
         return status;
     }
+    private void startCreationOfCardTableIfNotExists() {
+        CardsAndClientsTablesCreation cardsTable = new CardsAndClientsTablesCreation();
+
+        try {
+            Connection connection = ConnectFactory.getConnection();
+            DatabaseMetaData metaData = connection.getMetaData();
+            ResultSet table = metaData.getTables(null, null, "cards", null);
+            while (table.next()) {
+
+                    LOGGER.warn("Card table already exists");
+
+                    cardsTable.createTable(PATH_TO_CREATE_CARDS_TABLE);
+            }
+
+        } catch (SQLException throwables) {
+            LOGGER.warn("Table {} already exists",
+                    PATH_TO_CREATE_CARDS_TABLE.substring(PATH_TO_CREATE_CARDS_TABLE.lastIndexOf("/")+1));
+        } catch (IOException e) {
+            LOGGER.error("Table {} wasn't created",
+                    PATH_TO_CREATE_CARDS_TABLE.substring(PATH_TO_CREATE_CARDS_TABLE.lastIndexOf("/")+1));
+        }
+    }
 
     private FormFactor defineFormFactor(CardDTO cardDTO) {
         FormFactor formFactorTemp;
@@ -166,5 +151,30 @@ public class PostgreCardInputImpl implements CardInput, CardOutput {
 
     private boolean defineChip(CardDTO cardDTO) {
         return cardDTO.getChip().equals("yes");
+    }
+
+    @Override
+    public MyStatus save(Card card) {
+        MyStatus status = new MyStatus();
+
+        try (Connection connection = ConnectFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_CARD))
+        {
+            LOGGER.info("Data was inserted into cards table");
+
+            preparedStatement.setString(1, card.getCardNumberFirstFourDigits() +
+                    card.getCardNumberSecondEightDigits() +
+                    card.getCardNumberThirdFourDigits());
+            preparedStatement.setString(2, String.valueOf(card.getFormFactor()));
+            preparedStatement.setBoolean(3, card.isHasAChip());
+            preparedStatement.setString(4, card.getPinCode());
+
+            preparedStatement.executeUpdate();
+            status.setStatus(true);
+        } catch (SQLException e) {
+            LOGGER.error("Data wasn't inserted into cards table");
+            status.setStatus(false);
+        }
+        return status;
     }
 }

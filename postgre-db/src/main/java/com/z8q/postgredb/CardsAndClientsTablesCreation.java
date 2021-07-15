@@ -22,6 +22,7 @@ public class CardsAndClientsTablesCreation {
 
         try (Connection connection = ConnectFactory.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(createTable)) {
+
             preparedStatement.execute();
         } catch (SQLException e) {
             LOGGER.error("Error on creating table stage");
@@ -34,6 +35,8 @@ public class CardsAndClientsTablesCreation {
                 new FileReader(path))) {
             StringBuilder sb = new StringBuilder();
             String line;
+            if ((bufferedReader.readLine()) == null) {
+            }
             while ((line = bufferedReader.readLine()) != null) {
                 sb.append(line);
             }

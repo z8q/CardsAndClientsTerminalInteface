@@ -14,54 +14,42 @@ public class ClientHandlerImpl implements ClientHandler {
 
     ClientInput clientInput;
 
-    private final static Pattern LAST_NAME_PATTERN = Pattern.compile("^[a-zA-Z][a-zA-Z '-]*$");
+    private final static Pattern CHECK_NAME_PATTERN = Pattern.compile("^[a-zA-Z][a-zA-Z '-]*$");
 
     public ClientHandlerImpl(ClientInput clientInput) {
         this.clientInput = clientInput;
     }
 
     private boolean checkLastName(String lastnameInput, StringBuilder builder) {
-        boolean success = LAST_NAME_PATTERN.matcher(lastnameInput).matches();
+        boolean success = CHECK_NAME_PATTERN.matcher(lastnameInput).matches();
         if (!success) {
             builder.append(", Lastname contains invalid characters");
         }
         return success;
     }
 
-    @Override
     public MyStatus checkLastName(String lastnameInput) {
         MyStatus status = new MyStatus();
-        status.setStatus(LAST_NAME_PATTERN.matcher(lastnameInput).matches());
+        status.setStatus(CHECK_NAME_PATTERN.matcher(lastnameInput).matches());
         status.setMessage("Lastname contains invalid characters\n");
         return status;
     }
 
-    @Override
-    public MyStatus checkFirstName(String firstNameInput) {
+    private MyStatus checkFirstName(String firstNameInput) {
         MyStatus status = new MyStatus();
-        if (!firstNameInput.matches("^[a-zA-Z][a-zA-Z '-]*$")) {
-            status.setStatus(false);
-            status.setMessage("Firstname contains invalid characters\n");
-        } else {
-            status.setStatus(true);
-        }
+        status.setStatus(CHECK_NAME_PATTERN.matcher(firstNameInput).matches());
+        status.setMessage("Firstname contains invalid characters\n");
         return status;
     }
 
-    @Override
-    public MyStatus checkMiddleName(String middlenameInput) {
+    private MyStatus checkMiddleName(String middlenameInput) {
         MyStatus status = new MyStatus();
-        if (!middlenameInput.matches("^[a-zA-Z][a-zA-Z '-]*$")) {
-            status.setStatus(false);
-            status.setMessage("Middlename contains invalid characters\n");
-        } else {
-            status.setStatus(true);
-        }
+        status.setStatus(CHECK_NAME_PATTERN.matcher(middlenameInput).matches());
+        status.setMessage("Middlename contains invalid characters\n");
         return status;
     }
 
-    @Override
-    public MyStatus checkBirthDate(String birthDateInput) {
+    private MyStatus checkBirthDate(String birthDateInput) {
         MyStatus status = new MyStatus();
         SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy");
         date.setLenient(false);

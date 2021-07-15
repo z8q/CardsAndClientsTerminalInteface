@@ -138,9 +138,10 @@ public class MenuLevels {
         MyStatus linkCardToClient = clientHandler.checkPossibilityToLinkCardToClient(cardId, clientId);
         if (linkCardToClient.isStatus()) {
             System.out.println("Карта привязана");
-        } else {
-            System.out.println("Карта не привязана");
         }
+//        else {
+//            //System.out.println("Карта не привязана");
+//        }
 
     }
 }

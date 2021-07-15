@@ -117,12 +117,6 @@ public class PostgreClientInputImpl implements ClientInput, ClientOutput {
     }
 
     @Override
-    public void linkCardToClient(Client client, int cardId) {
-
-
-    }
-
-    @Override
     public void createClientObject(ClientDTO clientDTO) {
         CardsAndClientsTablesCreation clientsTable = new CardsAndClientsTablesCreation();
         MyStatus status = new MyStatus();
