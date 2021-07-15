@@ -2,6 +2,7 @@ package com.z8q;
 
 import com.z8q.handler.CardHandlerImpl;
 import com.z8q.handler.ClientHandlerImpl;
+import com.z8q.impl.PostgreCardInputImpl;
 import com.z8q.interfaces.*;
 import com.z8q.io.CardInputImpl;
 import com.z8q.menu.MenuLevels;
@@ -16,7 +17,7 @@ public class Application {
 
         //-------------------------Подлежит замене-------------------------------
         ClientInputImpl clientOutput = new ClientInputImpl();
-        CardInputImpl cardOutput = new CardInputImpl();
+        PostgreCardInputImpl cardOutput = new PostgreCardInputImpl();
         //-------------------------Подлежит замене-------------------------------
 
 

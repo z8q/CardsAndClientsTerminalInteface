@@ -6,6 +6,10 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
+import com.z8q.dto.CardDTO;
+import com.z8q.impl.PostgreCardInputImpl;
+import com.z8q.interfaces.PostgreCardInput;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,7 +21,7 @@ public class CardsAndClientsTablesCreation {
     private String createTable;
 
     public void createTable(String path) throws SQLException, IOException {
-        LOGGER.info("Table {} is created", path.substring(path.lastIndexOf("/")+1));
+        LOGGER.info("Attempt to create table {}", path.substring(path.lastIndexOf("/")+1));
 
         readSQLQuery(path);
 
@@ -25,7 +29,7 @@ public class CardsAndClientsTablesCreation {
              PreparedStatement preparedStatement = connection.prepareStatement(createTable)) {
             preparedStatement.execute();
         } catch (SQLException e) {
-            LOGGER.error("Error on creating table stage", e);
+            LOGGER.error("Error on creating table stage");
             throw e;
         }
     }
@@ -45,14 +49,18 @@ public class CardsAndClientsTablesCreation {
         }
     }
 
-    public static void main(String[] args) {
-        CardsAndClientsTablesCreation t1 = new CardsAndClientsTablesCreation();
-        try {
-            t1.createTable(PATH_TO_CREATE_CARDS_TABLE);
-            t1.createTable(PATH_TO_CREATE_CLIENTS_TABLES);
-        } catch (SQLException | IOException e) {
-            LOGGER.error("Error while creating new tables", e);
-            System.exit(0);
-        }
-    }
+//    public static void main(String[] args) {
+//        CardsAndClientsTablesCreation t1 = new CardsAndClientsTablesCreation();
+//        PostgreCardInput p1 = new PostgreCardInputImpl();
+//        CardDTO cdto = new CardDTO("1111333355557777", "1",
+//                "yes", "4444");
+//        try {
+//            t1.createTable(PATH_TO_CREATE_CARDS_TABLE);
+//            t1.createTable(PATH_TO_CREATE_CLIENTS_TABLES);
+//            p1.createCardObject(cdto);
+//        } catch (SQLException | IOException e) {
+//            LOGGER.error("Error while creating new tables", e);
+//            System.exit(0);
+//        }
+//    }
 }
