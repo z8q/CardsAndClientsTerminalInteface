@@ -4,5 +4,7 @@ CREATE TABLE cards (
     Form_Factor varchar(20),
     Chip varchar(20),
     pincode varchar(4),
-    primary key (id)
+    client_id int8,
+    primary key (id),
+    foreign key (client_id) REFERENCES clients(id)
 );

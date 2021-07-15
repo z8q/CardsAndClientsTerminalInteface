@@ -1,1 +1,2 @@
-[{"id":1,"lastName":"Petrov","firstName":"Petr","middleName":"Petrovich","birthDate":"Dec 11, 1987 12:00:00 AM","clientCards":["1"]}]
+[{"id":1.0,"lastName":"Petrov","firstName":"Petr","middleName":"Petrovich","birthDate":"Dec 11, 1987 12:00:00 AM","clientCards":["1"]},
+{"id":2,"lastName":"Petrov","firstName":"Petr","middleName":"Petrovich","birthDate":"Oct 21, 1989 12:00:00 AM","clientCards":[]}]

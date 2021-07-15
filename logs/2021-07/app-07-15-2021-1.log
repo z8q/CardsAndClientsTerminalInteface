@@ -1,0 +1,62 @@
+2021-07-15 09:47:49,046 INFO com.z8q.io.ClientInputImpl Client with id 2 was added to file
+2021-07-15 09:51:21,903 INFO com.z8q.postgredb.CardsAndClientsTablesCreation Attempt to create table Cards.sql
+2021-07-15 09:51:21,974 ERROR com.z8q.postgredb.CardsAndClientsTablesCreation Error on creating table stage
+2021-07-15 09:51:21,975 WARN com.z8q.impl.PostgreCardInputImpl Table Cards.sql already exists
+2021-07-15 09:51:21,978 ERROR com.z8q.impl.PostgreCardInputImpl Data wasn't inserted into cards table
+2021-07-15 09:51:21,978 ERROR com.z8q.impl.PostgreCardInputImpl Error on createCardObject stage
+2021-07-15 09:52:53,708 INFO com.z8q.postgredb.CardsAndClientsTablesCreation Attempt to create table Clients.sql
+2021-07-15 09:52:53,712 ERROR com.z8q.postgredb.CardsAndClientsTablesCreation Error on creating table stage
+2021-07-15 09:52:53,713 WARN com.z8q.impl.PostgreCardInputImpl Table Clients.sql already exists
+2021-07-15 09:52:53,717 ERROR com.z8q.impl.PostgreCardInputImpl Data wasn't inserted into clients table
+2021-07-15 09:52:53,717 ERROR com.z8q.impl.PostgreCardInputImpl Error on createCardObject stage
+2021-07-15 09:56:56,541 INFO com.z8q.postgredb.CardsAndClientsTablesCreation Attempt to create table Cards.sql
+2021-07-15 09:56:56,636 ERROR com.z8q.postgredb.CardsAndClientsTablesCreation Error on creating table stage
+2021-07-15 09:56:56,637 WARN com.z8q.impl.PostgreCardInputImpl Table Cards.sql already exists
+2021-07-15 09:56:56,643 INFO com.z8q.impl.PostgreCardInputImpl Data was inserted into cards table
+2021-07-15 09:58:05,381 INFO com.z8q.postgredb.CardsAndClientsTablesCreation Attempt to create table Clients.sql
+2021-07-15 09:58:05,392 ERROR com.z8q.postgredb.CardsAndClientsTablesCreation Error on creating table stage
+2021-07-15 09:58:05,392 WARN com.z8q.impl.PostgreCardInputImpl Table Clients.sql already exists
+2021-07-15 09:58:05,399 INFO com.z8q.impl.PostgreCardInputImpl Data was inserted into clients table
+2021-07-15 10:01:31,521 INFO com.z8q.postgredb.CardsAndClientsTablesCreation Attempt to create table Clients.sql
+2021-07-15 10:01:31,596 ERROR com.z8q.postgredb.CardsAndClientsTablesCreation Error on creating table stage
+2021-07-15 10:01:31,596 WARN com.z8q.impl.PostgreCardInputImpl Table Clients.sql already exists
+2021-07-15 10:01:31,606 INFO com.z8q.impl.PostgreCardInputImpl Data was inserted into clients table
+2021-07-15 10:03:50,546 INFO com.z8q.postgredb.CardsAndClientsTablesCreation Attempt to create table Clients.sql
+2021-07-15 10:03:50,562 ERROR com.z8q.postgredb.CardsAndClientsTablesCreation Error on creating table stage
+2021-07-15 10:03:50,562 WARN com.z8q.impl.PostgreCardInputImpl Table Clients.sql already exists
+2021-07-15 10:03:50,570 INFO com.z8q.impl.PostgreCardInputImpl Data was inserted into clients table
+2021-07-15 11:14:10,261 INFO com.z8q.postgredb.CardsAndClientsTablesCreation Attempt to create table Cards.sql
+2021-07-15 11:14:10,340 ERROR com.z8q.postgredb.CardsAndClientsTablesCreation Error on creating table stage
+2021-07-15 11:14:10,340 WARN com.z8q.impl.PostgreCardInputImpl Table Cards.sql already exists
+2021-07-15 11:14:10,345 INFO com.z8q.impl.PostgreCardInputImpl Data was inserted into cards table
+2021-07-15 11:14:45,159 INFO com.z8q.postgredb.CardsAndClientsTablesCreation Attempt to create table Clients.sql
+2021-07-15 11:14:45,170 ERROR com.z8q.postgredb.CardsAndClientsTablesCreation Error on creating table stage
+2021-07-15 11:14:45,170 WARN com.z8q.impl.PostgreCardInputImpl Table Clients.sql already exists
+2021-07-15 11:14:45,180 INFO com.z8q.impl.PostgreCardInputImpl Data was inserted into clients table
+2021-07-15 13:11:44,973 INFO com.z8q.postgredb.CardsAndClientsTablesCreation Attempt to create table Cards.sql
+2021-07-15 13:11:45,069 ERROR com.z8q.postgredb.CardsAndClientsTablesCreation Error on creating table stage
+2021-07-15 13:11:45,069 WARN com.z8q.impl.PostgreCardInputImpl Table Cards.sql already exists
+2021-07-15 13:11:45,075 INFO com.z8q.impl.PostgreCardInputImpl Data was inserted into cards table
+2021-07-15 13:12:50,137 INFO com.z8q.postgredb.CardsAndClientsTablesCreation Attempt to create table Clients.sql
+2021-07-15 13:12:50,149 ERROR com.z8q.postgredb.CardsAndClientsTablesCreation Error on creating table stage
+2021-07-15 13:12:50,149 WARN com.z8q.impl.PostgreCardInputImpl Table Clients.sql already exists
+2021-07-15 13:12:50,158 INFO com.z8q.impl.PostgreCardInputImpl Data was inserted into clients table
+2021-07-15 15:45:08,688 INFO com.z8q.postgredb.CardsAndClientsTablesCreation Attempt to create table Cards.sql
+2021-07-15 15:45:08,781 ERROR com.z8q.postgredb.CardsAndClientsTablesCreation Error on creating table stage
+2021-07-15 15:45:08,781 WARN com.z8q.impl.PostgreCardInputImpl Table Cards.sql already exists
+2021-07-15 15:45:08,788 INFO com.z8q.impl.PostgreCardInputImpl Data was inserted into cards table
+2021-07-15 15:45:08,793 ERROR com.z8q.impl.PostgreCardInputImpl Data wasn't inserted into cards table
+2021-07-15 15:45:08,793 ERROR com.z8q.impl.PostgreCardInputImpl Error on createCardObject stage
+2021-07-15 15:45:35,535 INFO com.z8q.postgredb.CardsAndClientsTablesCreation Attempt to create table Clients.sql
+2021-07-15 15:45:35,560 INFO com.z8q.impl.PostgreCardInputImpl Data was inserted into clients table
+2021-07-15 15:45:44,629 ERROR com.z8q.impl.PostgreCardInputImpl Can't read the Card table
+2021-07-15 15:46:12,908 INFO com.z8q.postgredb.CardsAndClientsTablesCreation Attempt to create table Cards.sql
+2021-07-15 15:46:12,930 INFO com.z8q.impl.PostgreCardInputImpl Data was inserted into cards table
+2021-07-15 16:27:58,930 INFO com.z8q.postgredb.CardsAndClientsTablesCreation Attempt to create table Cards.sql
+2021-07-15 16:27:59,013 ERROR com.z8q.postgredb.CardsAndClientsTablesCreation Error on creating table stage
+2021-07-15 16:27:59,013 WARN com.z8q.impl.PostgreCardInputImpl Table Cards.sql already exists
+2021-07-15 16:27:59,019 INFO com.z8q.impl.PostgreCardInputImpl Data was inserted into cards table
+2021-07-15 16:28:33,486 INFO com.z8q.postgredb.CardsAndClientsTablesCreation Attempt to create table Clients.sql
+2021-07-15 16:28:33,498 ERROR com.z8q.postgredb.CardsAndClientsTablesCreation Error on creating table stage
+2021-07-15 16:28:33,498 WARN com.z8q.impl.PostgreCardInputImpl Table Clients.sql already exists
+2021-07-15 16:28:33,508 INFO com.z8q.impl.PostgreCardInputImpl Data was inserted into clients table

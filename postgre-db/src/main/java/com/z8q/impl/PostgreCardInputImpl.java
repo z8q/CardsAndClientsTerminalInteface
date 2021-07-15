@@ -1,9 +1,8 @@
 package com.z8q.impl;
 
-import com.google.gson.Gson;
 import com.z8q.dto.CardDTO;
-import com.z8q.interfaces.PostgreCardInput;
-import com.z8q.interfaces.PostgreCardOutput;
+import com.z8q.interfaces.CardInput;
+import com.z8q.interfaces.CardOutput;
 import com.z8q.model.Card;
 import com.z8q.postgredb.CardsAndClientsTablesCreation;
 import com.z8q.postgredb.ConnectFactory;
@@ -20,7 +19,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostgreCardInputImpl implements PostgreCardInput, PostgreCardOutput {
+public class PostgreCardInputImpl implements CardInput, CardOutput {
 
     private static final Logger LOGGER = LogManager.getLogger(PostgreCardInputImpl.class);
     private static final String PATH_TO_CREATE_CARDS_TABLE = "postgre-db/src/main/resources/Cards.sql";
@@ -72,6 +71,7 @@ public class PostgreCardInputImpl implements PostgreCardInput, PostgreCardOutput
                 String rsFormFactor = rs.getString("form_factor");
                 boolean rsChip = rs.getBoolean("chip");
                 String rsPin = rs.getString("pincode");
+                Long rsLinkedClient = rs.getLong("client_id");
 
                 Card card = new Card.Builder()
                         .withId(rsCardId)
