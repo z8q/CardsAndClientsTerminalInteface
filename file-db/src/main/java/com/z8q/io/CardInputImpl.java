@@ -49,6 +49,7 @@ public class CardInputImpl implements CardInput, CardOutput {
         }
         return printCardList;
     }
+
     @Override
     public MyStatus save(Card card) {
         MyStatus status = new MyStatus();

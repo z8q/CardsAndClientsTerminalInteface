@@ -70,10 +70,8 @@ public class ClientHandlerImpl implements ClientHandler {
         boolean birthdate = checkBirthDate(clientDTO.getDate(), sb);
 
 
-        if (!lastname || !firstname ||
-                !middlename || !birthdate) {
+        if (!lastname || !firstname || !middlename || !birthdate) {
             String cvs = sb.toString();
-
             checkClientStatus.setStatus(false);
             checkClientStatus.setMessage(cvs);
         } else {
