@@ -13,37 +13,30 @@ import org.apache.logging.log4j.Logger;
 public class CardsAndClientsTablesCreation {
 
     private static final Logger LOGGER = LogManager.getLogger(CardsAndClientsTablesCreation.class);
-    private String createTable;
 
-    public void createTable(String path) throws SQLException, IOException {
+    public static void createTable(String path) throws SQLException {
         LOGGER.info("Attempt to create table {}", path.substring(path.lastIndexOf("/")+1));
 
-        readSQLQuery(path);
+        String makeQueryString = readSQLQuery(path);
 
-        try (Connection connection = ConnectFactory.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(createTable)) {
-
-            preparedStatement.execute();
-        } catch (SQLException e) {
-            LOGGER.error("Error on creating table stage");
-            throw e;
-        }
+        Connection connection = ConnectFactory.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(makeQueryString);
+        preparedStatement.execute();
     }
 
-    private void readSQLQuery(String path) throws IOException {
+    private static String readSQLQuery(String path) {
+        String createTableTemp = null;
         try (BufferedReader bufferedReader = new BufferedReader(
                 new FileReader(path))) {
             StringBuilder sb = new StringBuilder();
             String line;
-            if ((bufferedReader.readLine()) == null) {
-            }
             while ((line = bufferedReader.readLine()) != null) {
                 sb.append(line);
             }
-            createTable = sb.toString();
+            createTableTemp = sb.toString();
         } catch (IOException e) {
             LOGGER.error("Error while reading SQLQuery", e);
-            throw e;
         }
+        return createTableTemp;
     }
 }

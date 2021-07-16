@@ -11,7 +11,6 @@ import com.z8q.properties.MyStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +19,10 @@ public class PostgreCardInputImpl implements CardInput, CardOutput {
 
     private static final Logger LOGGER = LogManager.getLogger(PostgreCardInputImpl.class);
     private static final String PATH_TO_CREATE_CARDS_TABLE = "postgre-db/src/main/resources/Cards.sql";
+    private static final String GET_CARD_BY_ID = "SELECT * FROM cards WHERE id = ?;";
+    private static final String GET_ALL_CARDS = "SELECT * FROM cards;";
     private static final String INSERT_CARD = "INSERT INTO cards " +
             "(pan, form_factor, chip, pincode) VALUES (?, ?, ?, ?);";
-    private static final String GET_ALL_CARDS = "SELECT * FROM cards;";
-    private static final String GET_CARD_BY_ID = "SELECT * FROM cards WHERE id = ?;";
 
     @Override
     public Card getCardById(Long cardIndex) {
@@ -50,17 +49,17 @@ public class PostgreCardInputImpl implements CardInput, CardOutput {
                         .build();
             }
         } catch (SQLException e) {
-            LOGGER.error("Can't read the Card table");
+            LOGGER.error("Can't get a Card by Id", e);
         }
         return card;
     }
 
     @Override
     public List<Card> getAll() {
+        //  надо здесь dto использовать
         List<Card> cardList = new ArrayList<>();
         try (Connection connection = ConnectFactory.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_CARDS)) {
-
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 Long rsCardId = rs.getLong("id");
@@ -68,7 +67,7 @@ public class PostgreCardInputImpl implements CardInput, CardOutput {
                 String rsFormFactor = rs.getString("form_factor");
                 boolean rsChip = rs.getBoolean("chip");
                 String rsPin = rs.getString("pincode");
-                Long rsLinkedClient = rs.getLong("client_id");
+                //Long rsLinkedClient = rs.getLong("client_id");
 
                 Card card = new Card.Builder()
                         .withId(rsCardId)
@@ -82,7 +81,7 @@ public class PostgreCardInputImpl implements CardInput, CardOutput {
                 cardList.add(card);
             }
         } catch (SQLException e) {
-            LOGGER.error("Can't read the Card table");
+            LOGGER.error("Can't get list of Cards", e);
         }
        return cardList;
     }
@@ -107,34 +106,21 @@ public class PostgreCardInputImpl implements CardInput, CardOutput {
 
         MyStatus saveCard = save(card);
         if(saveCard.isStatus()) {
-            status.setStatus(true);
             System.out.println("Карта сохранена \n");
         } else {
-            status.setStatus(false);
             status.setMessage("Error on createCardObject stage");
             LOGGER.error("Error on createCardObject stage");
         }
         return status;
     }
+
     private void startCreationOfCardTableIfNotExists() {
-        CardsAndClientsTablesCreation cardsTable = new CardsAndClientsTablesCreation();
-
         try {
-            Connection connection = ConnectFactory.getConnection();
-            DatabaseMetaData metaData = connection.getMetaData();
-            ResultSet table = metaData.getTables(null, null, "cards", null);
-            while (table.next()) {
-
-                    LOGGER.warn("Card table already exists");
-
-                    cardsTable.createTable(PATH_TO_CREATE_CARDS_TABLE);
-            }
-
+            PostgreClientInputImpl client = new PostgreClientInputImpl();
+            client.startCreationOfClientTableIfNotExists();
+            CardsAndClientsTablesCreation.createTable(PATH_TO_CREATE_CARDS_TABLE);
         } catch (SQLException throwables) {
             LOGGER.warn("Table {} already exists",
-                    PATH_TO_CREATE_CARDS_TABLE.substring(PATH_TO_CREATE_CARDS_TABLE.lastIndexOf("/")+1));
-        } catch (IOException e) {
-            LOGGER.error("Table {} wasn't created",
                     PATH_TO_CREATE_CARDS_TABLE.substring(PATH_TO_CREATE_CARDS_TABLE.lastIndexOf("/")+1));
         }
     }
@@ -160,8 +146,6 @@ public class PostgreCardInputImpl implements CardInput, CardOutput {
         try (Connection connection = ConnectFactory.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_CARD))
         {
-            LOGGER.info("Data was inserted into cards table");
-
             preparedStatement.setString(1, card.getCardNumberFirstFourDigits() +
                     card.getCardNumberSecondEightDigits() +
                     card.getCardNumberThirdFourDigits());
@@ -170,6 +154,7 @@ public class PostgreCardInputImpl implements CardInput, CardOutput {
             preparedStatement.setString(4, card.getPinCode());
 
             preparedStatement.executeUpdate();
+            LOGGER.info("Data was inserted into cards table");
             status.setStatus(true);
         } catch (SQLException e) {
             LOGGER.error("Data wasn't inserted into cards table");

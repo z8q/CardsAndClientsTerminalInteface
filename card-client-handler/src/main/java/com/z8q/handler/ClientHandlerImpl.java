@@ -94,14 +94,13 @@ public class ClientHandlerImpl implements ClientHandler {
 
     @Override
     public MyStatus checkPossibilityToLinkCardToClient(String cardId, String clientId){
-        MyStatus status = new MyStatus();
+        MyStatus status = null;
         if ((cardId.matches("[-+]?\\d+")) && (clientId.matches("[-+]?\\d+"))) {
-            status.setStatus(clientInput.createClientObjectWithUpdatedCardList(cardId, clientId).isStatus());
-            return status;
-        } else {
-            status.setStatus(false);
-            status.setMessage("Wrong id format");
-            return status;
+            status = clientInput.createClientObjectWithUpdatedCardList(cardId, clientId);
+            if (!status.isStatus()) {
+                status.setMessage("Wrong id format");
+            }
         }
+        return status;
     }
 }

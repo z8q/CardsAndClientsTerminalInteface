@@ -10,8 +10,6 @@ import com.z8q.menu.MenuLevels;
 import com.z8q.io.ClientInputImpl;
 import com.z8q.postgredb.CardsAndClientsTablesCreation;
 
-import java.sql.SQLException;
-
 public class Application {
     public static void main(String[] args) {
 

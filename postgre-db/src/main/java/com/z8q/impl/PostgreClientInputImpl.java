@@ -10,7 +10,6 @@ import com.z8q.properties.MyStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,7 +28,8 @@ public class PostgreClientInputImpl implements ClientInput, ClientOutput {
     private static final String GET_ALL_CLIENTS = "SELECT * FROM clients;";
     private static final String INSERT_CLIENT = "INSERT INTO clients " +
             "(lastname, firstname, middlename, date_of_birth) VALUES (?, ?, ?, ?);";
-    private static final String LINK_CARD_TO_CLIENT = "UPDATE cards SET client_id = ? where id = ?;";
+    private static final String LINK_CARD_TO_CLIENT = "UPDATE cards SET client_id = ? where id = " +
+            "(SELECT id FROM cards WHERE id = ?);";
 
     @Override
     public Client getClientById(Long clientIndex) {
@@ -118,18 +118,9 @@ public class PostgreClientInputImpl implements ClientInput, ClientOutput {
 
     @Override
     public void createClientObject(ClientDTO clientDTO) {
-        CardsAndClientsTablesCreation clientsTable = new CardsAndClientsTablesCreation();
         MyStatus status = new MyStatus();
 
-        try {
-            clientsTable.createTable(PATH_TO_CREATE_CLIENTS_TABLE);
-        } catch (SQLException throwables) {
-            LOGGER.warn("Table {} already exists",
-                    PATH_TO_CREATE_CLIENTS_TABLE.substring(PATH_TO_CREATE_CLIENTS_TABLE.lastIndexOf("/")+1));
-        } catch (IOException e) {
-            LOGGER.error("Table {} wasn't created",
-                    PATH_TO_CREATE_CLIENTS_TABLE.substring(PATH_TO_CREATE_CLIENTS_TABLE.lastIndexOf("/")+1));
-        }
+        startCreationOfClientTableIfNotExists();
 
         Date date = convertStringToDate(clientDTO);
 
@@ -143,11 +134,19 @@ public class PostgreClientInputImpl implements ClientInput, ClientOutput {
         MyStatus saveCard = save(client);
         if(saveCard.isStatus()) {
             status.setStatus(true);
-            System.out.println("Карта сохранена \n");
         } else {
             status.setStatus(false);
             status.setMessage("Error on createCardObject stage");
             LOGGER.error("Error on createCardObject stage");
+        }
+    }
+
+    protected void startCreationOfClientTableIfNotExists() {
+        try {
+            CardsAndClientsTablesCreation.createTable(PATH_TO_CREATE_CLIENTS_TABLE);
+        } catch (SQLException throwables) {
+            LOGGER.warn("Table {} already exists",
+                    PATH_TO_CREATE_CLIENTS_TABLE.substring(PATH_TO_CREATE_CLIENTS_TABLE.lastIndexOf("/")+1));
         }
     }
 
@@ -170,9 +169,10 @@ public class PostgreClientInputImpl implements ClientInput, ClientOutput {
             preparedStatement.setLong(2, Long.parseLong(cardId));
 
             preparedStatement.executeUpdate();
-
+            status.setStatus(true);
         } catch (SQLException throwables) {
             LOGGER.error("Error while linking card to client");
+            status.setStatus(false);
         }
         return status;
     }
