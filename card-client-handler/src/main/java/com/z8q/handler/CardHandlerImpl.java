@@ -5,75 +5,110 @@ import com.z8q.interfaces.CardHandler;
 import com.z8q.interfaces.CardInput;
 import com.z8q.properties.MyStatus;
 
+import java.util.regex.Pattern;
+
 public class CardHandlerImpl implements CardHandler {
 
     CardInput cardInput;
 
-    public CardHandlerImpl(CardInput cardInput) {
-        this.cardInput = cardInput;
+    private final static Pattern CHECK_PAN_PATTERN = Pattern.compile("^\\d{16}$");
+    private final static Pattern CHECK_PIN_PATTERN = Pattern.compile("^\\d{4}$");
+
+    public CardHandlerImpl(CardInput cardInput) { this.cardInput = cardInput; }
+
+    private boolean checkPAN(String cardNumber16DigitsInput, StringBuilder builder) {
+        boolean success = CHECK_PAN_PATTERN.matcher(cardNumber16DigitsInput).matches();
+        if (!success) {
+            builder.append("Card number contains invalid characters\n");
+        }
+        return success;
     }
 
-    @Override
-    public MyStatus checkPAN(String cardNumber16DigitsInput) {
-        MyStatus status = new MyStatus();
-        if (!cardNumber16DigitsInput.matches("^\\d{16}$")) {
-            status.setStatus(false);
-            status.setMessage("Card number contains invalid characters\n");
-        } else {
-            status.setStatus(true);
-        }
-        return status;
-    }
-    @Override
-    public MyStatus checkFormFactor(String realOrVirtualInput){
-        MyStatus status = new MyStatus();
+    private boolean checkFormFactor(String realOrVirtualInput ,StringBuilder builder){
+        boolean success = false;
         if(!realOrVirtualInput.equals("1") && !realOrVirtualInput.equals("2")) {
-            status.setStatus(false);
-            status.setMessage("Answer to FormFactor question contains invalid characters\n");
+            builder.append("Answer to FormFactor question contains invalid characters\n");
         } else {
-            status.setStatus(true);
+            success = true;
         }
-        return status;
+        return success;
     }
-    @Override
-    public MyStatus checkChip(String hasAChipInput){
-        MyStatus status = new MyStatus();
+
+    private boolean checkChip(String hasAChipInput, StringBuilder builder){
+        boolean success = false;
         if(!hasAChipInput.equals("yes") && !hasAChipInput.equals("no")) {
-            status.setStatus(false);
-            status.setMessage("Answer to chip question contains invalid characters\n");
+            builder.append("Answer to chip question contains invalid characters\n");
         } else {
-            status.setStatus(true);
+            success = true;
         }
-        return status;
+        return success;
     }
-    @Override
-    public MyStatus checkPin(String pinInput){
-        MyStatus status = new MyStatus();
-        if(!pinInput.matches("^\\d{4}$")) {
-            status.setStatus(false);
-            status.setMessage("PIN contains invalid characters\n");
-        } else {
-            status.setStatus(true);
+
+    public boolean checkPin(String pinInput, StringBuilder builder){
+        boolean success = CHECK_PIN_PATTERN.matcher(pinInput).matches();
+        if (!success) {
+            builder.append("PIN contains invalid characters\n");
         }
-        return status;
+        return success;
     }
+
+//    public MyStatus checkPAN(String cardNumber16DigitsInput) {
+//        MyStatus status = new MyStatus();
+//        if (!cardNumber16DigitsInput.matches("^\\d{16}$")) {
+//            status.setStatus(false);
+//            status.setMessage("Card number contains invalid characters\n");
+//        } else {
+//            status.setStatus(true);
+//        }
+//        return status;
+//    }
+//
+//    public MyStatus checkFormFactor(String realOrVirtualInput){
+//        MyStatus status = new MyStatus();
+//        if(!realOrVirtualInput.equals("1") && !realOrVirtualInput.equals("2")) {
+//            status.setStatus(false);
+//            status.setMessage("Answer to FormFactor question contains invalid characters\n");
+//        } else {
+//            status.setStatus(true);
+//        }
+//        return status;
+//    }
+//
+//    public MyStatus checkChip(String hasAChipInput){
+//        MyStatus status = new MyStatus();
+//        if(!hasAChipInput.equals("yes") && !hasAChipInput.equals("no")) {
+//            status.setStatus(false);
+//            status.setMessage("Answer to chip question contains invalid characters\n");
+//        } else {
+//            status.setStatus(true);
+//        }
+//        return status;
+//    }
+//
+//    public MyStatus checkPin(String pinInput){
+//        MyStatus status = new MyStatus();
+//        if(!pinInput.matches("^\\d{4}$")) {
+//            status.setStatus(false);
+//            status.setMessage("PIN contains invalid characters\n");
+//        } else {
+//            status.setStatus(true);
+//        }
+//        return status;
+//    }
+
     @Override
     public MyStatus checkCardDTO(CardDTO cardDTO){
         MyStatus checkCardStatus = new MyStatus();
         StringBuilder sb = new StringBuilder();
 
-        MyStatus pan = checkPAN(cardDTO.getPan());
-        MyStatus formFactor = checkFormFactor(cardDTO.getFormFactor());
-        MyStatus chip = checkChip(cardDTO.getChip());
-        MyStatus pin = checkPin(cardDTO.getPinCode());
+        boolean pan = checkPAN(cardDTO.getPan(), sb);
+        boolean formFactor = checkFormFactor(cardDTO.getFormFactor(), sb);
+        boolean chip = checkChip(cardDTO.getChip(), sb);
+        boolean pin = checkPin(cardDTO.getPinCode(), sb);
 
-        if (!pan.isStatus() || !formFactor.isStatus() ||
-                    !chip.isStatus() || !pin.isStatus()) {
-            sb.append(pan.getMessage());
-            sb.append(formFactor.getMessage());
-            sb.append(chip.getMessage());
-            sb.append(pin.getMessage());
-            String cvs = sb.toString().replaceAll("null", "");
+        if (!pan || !formFactor ||
+                    !chip || !pin) {
+            String cvs = sb.toString();
             checkCardStatus.setStatus(false);
             checkCardStatus.setMessage(cvs);
         } else {
