@@ -91,7 +91,7 @@ public class MenuLevels {
         String realOrVirtualInput = sc.nextLine();
 
         String hasAChipInput;
-        if (FormFactor.VIRTUAL.name().equals(realOrVirtualInput)) {
+        if (("2").equals(realOrVirtualInput)) {
             hasAChipInput = "no";
         } else {
             System.out.println("Добавить чип в карту? - yes/no");
@@ -138,9 +138,9 @@ public class MenuLevels {
         MyStatus linkCardToClient = clientHandler.checkPossibilityToLinkCardToClient(cardId, clientId);
         if (linkCardToClient.isStatus()) {
             System.out.println("Карта привязана");
-        } else {
+        }
+        else {
             System.out.println("Карта не привязана");
         }
-
     }
 }

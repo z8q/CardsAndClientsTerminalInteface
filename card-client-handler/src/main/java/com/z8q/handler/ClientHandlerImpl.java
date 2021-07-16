@@ -14,66 +14,49 @@ public class ClientHandlerImpl implements ClientHandler {
 
     ClientInput clientInput;
 
-    private final static Pattern LAST_NAME_PATTERN = Pattern.compile("^[a-zA-Z][a-zA-Z '-]*$");
+    private final static Pattern CHECK_NAME_PATTERN = Pattern.compile("^[a-zA-Z][a-zA-Z '-]*$");
 
     public ClientHandlerImpl(ClientInput clientInput) {
         this.clientInput = clientInput;
     }
 
     private boolean checkLastName(String lastnameInput, StringBuilder builder) {
-        boolean success = LAST_NAME_PATTERN.matcher(lastnameInput).matches();
+        boolean success = CHECK_NAME_PATTERN.matcher(lastnameInput).matches();
         if (!success) {
-            builder.append(", Lastname contains invalid characters");
+            builder.append("Lastname contains invalid characters\n");
         }
         return success;
     }
-
-    @Override
-    public MyStatus checkLastName(String lastnameInput) {
-        MyStatus status = new MyStatus();
-        status.setStatus(LAST_NAME_PATTERN.matcher(lastnameInput).matches());
-        status.setMessage("Lastname contains invalid characters\n");
-        return status;
-    }
-
-    @Override
-    public MyStatus checkFirstName(String firstNameInput) {
-        MyStatus status = new MyStatus();
-        if (!firstNameInput.matches("^[a-zA-Z][a-zA-Z '-]*$")) {
-            status.setStatus(false);
-            status.setMessage("Firstname contains invalid characters\n");
-        } else {
-            status.setStatus(true);
+    private boolean checkFirstName(String firstnameInput, StringBuilder builder) {
+        boolean success = CHECK_NAME_PATTERN.matcher(firstnameInput).matches();
+        if (!success) {
+            builder.append("Firstname contains invalid characters\n");
         }
-        return status;
+        return success;
     }
-
-    @Override
-    public MyStatus checkMiddleName(String middlenameInput) {
-        MyStatus status = new MyStatus();
-        if (!middlenameInput.matches("^[a-zA-Z][a-zA-Z '-]*$")) {
-            status.setStatus(false);
-            status.setMessage("Middlename contains invalid characters\n");
-        } else {
-            status.setStatus(true);
+    private boolean checkMiddleName(String middlenameInput, StringBuilder builder) {
+        boolean success = CHECK_NAME_PATTERN.matcher(middlenameInput).matches();
+        if (!success) {
+            if(middlenameInput.equals("")) {
+                success = true;
+            } else  {
+                builder.append("Middlename contains invalid characters\n");
+            }
         }
-        return status;
+        return success;
     }
-
-    @Override
-    public MyStatus checkBirthDate(String birthDateInput) {
-        MyStatus status = new MyStatus();
+    private boolean checkBirthDate(String birthDateInput, StringBuilder builder) {
+        boolean success;
         SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy");
         date.setLenient(false);
+
         try {
             Date javaDate = date.parse(birthDateInput);
         } catch (ParseException e) {
-            status.setStatus(false);
-            status.setMessage("Wrong date format");
-            return status;
+            builder.append("Wrong date format\n");
         }
-        status.setStatus(true);
-        return status;
+        success = true;
+        return success;
     }
 
     @Override
@@ -81,19 +64,15 @@ public class ClientHandlerImpl implements ClientHandler {
         MyStatus checkClientStatus = new MyStatus();
         StringBuilder sb = new StringBuilder();
 
-        MyStatus lastname = checkLastName(clientDTO.getLastname());
-        MyStatus firstname = checkFirstName(clientDTO.getFirstname());
-        MyStatus middlename = checkMiddleName(clientDTO.getMiddlename());
-        MyStatus birthdate = checkBirthDate(clientDTO.getDate());
+        boolean lastname = checkLastName(clientDTO.getLastname(), sb);
+        boolean firstname = checkFirstName(clientDTO.getFirstname(), sb);
+        boolean middlename = checkMiddleName(clientDTO.getMiddlename(), sb);
+        boolean birthdate = checkBirthDate(clientDTO.getDate(), sb);
 
 
-        if (!lastname.isStatus() || !firstname.isStatus() ||
-                !middlename.isStatus() || !birthdate.isStatus()) {
-            sb.append(lastname.getMessage());
-            sb.append(firstname.getMessage());
-            sb.append(middlename.getMessage());
-            sb.append(birthdate.getMessage());
-            String cvs = sb.toString().replaceAll("null", "");
+        if (!lastname || !firstname ||
+                !middlename || !birthdate) {
+            String cvs = sb.toString();
 
             checkClientStatus.setStatus(false);
             checkClientStatus.setMessage(cvs);
@@ -106,14 +85,13 @@ public class ClientHandlerImpl implements ClientHandler {
 
     @Override
     public MyStatus checkPossibilityToLinkCardToClient(String cardId, String clientId){
-        MyStatus status = new MyStatus();
+        MyStatus status = null;
         if ((cardId.matches("[-+]?\\d+")) && (clientId.matches("[-+]?\\d+"))) {
-            status.setStatus(clientInput.createClientObjectWithUpdatedCardList(cardId, clientId).isStatus());
-            return status;
-        } else {
-            status.setStatus(false);
-            status.setMessage("Wrong id format");
-            return status;
+            status = clientInput.createClientObjectWithUpdatedCardList(cardId, clientId);
+            if (!status.isStatus()) {
+                status.setMessage("Wrong id format");
+            }
         }
+        return status;
     }
 }

@@ -10,14 +10,11 @@ import com.z8q.properties.MyStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
 
 public class PostgreClientInputImpl implements ClientInput, ClientOutput {
 
@@ -29,7 +26,19 @@ public class PostgreClientInputImpl implements ClientInput, ClientOutput {
     private static final String GET_ALL_CLIENTS = "SELECT * FROM clients;";
     private static final String INSERT_CLIENT = "INSERT INTO clients " +
             "(lastname, firstname, middlename, date_of_birth) VALUES (?, ?, ?, ?);";
-    private static final String LINK_CARD_TO_CLIENT = "UPDATE cards SET client_id = ? where id = ?;";
+
+    private static final String LINK_CARD_TO_CLIENT = "UPDATE cards SET client_id = ? where id = " +
+            "(SELECT id FROM cards WHERE id = ?);";
+    private static final String FIND_IF_CARD_ID_EXISTS = "select id from cards where id = ?";
+    private static final String FIND_IF_CLIENT_ID_EXISTS = "select id from clients where id = ?";
+
+    private PostgreClientInputImpl() {
+    }
+
+    public static PostgreClientInputImpl checkClientTableAndGetInstance() {
+        startCreationOfClientTableIfNotExists();
+        return new PostgreClientInputImpl();
+    }
 
     @Override
     public Client getClientById(Long clientIndex) {
@@ -93,8 +102,7 @@ public class PostgreClientInputImpl implements ClientInput, ClientOutput {
         MyStatus status = new MyStatus();
 
         try (Connection connection = ConnectFactory.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_CLIENT))
-        {
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_CLIENT)) {
 
             preparedStatement.setString(1, client.getLastName());
             preparedStatement.setString(2, client.getFirstName());
@@ -117,25 +125,8 @@ public class PostgreClientInputImpl implements ClientInput, ClientOutput {
     }
 
     @Override
-    public void linkCardToClient(Client client, int cardId) {
-
-
-    }
-
-    @Override
     public void createClientObject(ClientDTO clientDTO) {
-        CardsAndClientsTablesCreation clientsTable = new CardsAndClientsTablesCreation();
         MyStatus status = new MyStatus();
-
-        try {
-            clientsTable.createTable(PATH_TO_CREATE_CLIENTS_TABLE);
-        } catch (SQLException throwables) {
-            LOGGER.warn("Table {} already exists",
-                    PATH_TO_CREATE_CLIENTS_TABLE.substring(PATH_TO_CREATE_CLIENTS_TABLE.lastIndexOf("/")+1));
-        } catch (IOException e) {
-            LOGGER.error("Table {} wasn't created",
-                    PATH_TO_CREATE_CLIENTS_TABLE.substring(PATH_TO_CREATE_CLIENTS_TABLE.lastIndexOf("/")+1));
-        }
 
         Date date = convertStringToDate(clientDTO);
 
@@ -147,13 +138,25 @@ public class PostgreClientInputImpl implements ClientInput, ClientOutput {
                 .build();
 
         MyStatus saveCard = save(client);
-        if(saveCard.isStatus()) {
+        if (saveCard.isStatus()) {
             status.setStatus(true);
-            System.out.println("Карта сохранена \n");
         } else {
             status.setStatus(false);
             status.setMessage("Error on createCardObject stage");
             LOGGER.error("Error on createCardObject stage");
+        }
+    }
+
+    private static void startCreationOfClientTableIfNotExists() {
+        try (Connection connection = ConnectFactory.getConnection()) {
+            DatabaseMetaData metaData = connection.getMetaData();
+            ResultSet table = metaData.getTables(null, null, "clients", null);
+            if (!table.next()) {
+                CardsAndClientsTablesCreation.createTable(PATH_TO_CREATE_CLIENTS_TABLE);
+            }
+        } catch (SQLException throwables) {
+            LOGGER.warn("Table {} already exists",
+                    PATH_TO_CREATE_CLIENTS_TABLE.substring(PATH_TO_CREATE_CLIENTS_TABLE.lastIndexOf("/") + 1));
         }
     }
 
@@ -162,7 +165,7 @@ public class PostgreClientInputImpl implements ClientInput, ClientOutput {
         try {
             dateTemp = DATETEMP.parse(clientDTO.getDate());
         } catch (ParseException e) {
-            LOGGER.error("Date format error",e);
+            LOGGER.error("Date format error", e);
         }
         return dateTemp;
     }
@@ -170,16 +173,49 @@ public class PostgreClientInputImpl implements ClientInput, ClientOutput {
     @Override
     public MyStatus createClientObjectWithUpdatedCardList(String cardId, String clientId) {
         MyStatus status = new MyStatus();
+
         try (Connection connection = ConnectFactory.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(LINK_CARD_TO_CLIENT)) {
+            checkIdsForExistence(cardId, clientId);
+
             preparedStatement.setLong(1, Long.parseLong(clientId));
             preparedStatement.setLong(2, Long.parseLong(cardId));
 
             preparedStatement.executeUpdate();
-
+            status.setStatus(true);
         } catch (SQLException throwables) {
             LOGGER.error("Error while linking card to client");
+            status.setStatus(false);
         }
         return status;
+    }
+
+    private void checkIdsForExistence(String cardId, String clientId) throws SQLException {
+        try (Connection connection = ConnectFactory.getConnection();
+             PreparedStatement preparedStatement1 = connection.prepareStatement(FIND_IF_CARD_ID_EXISTS);
+             PreparedStatement preparedStatement2 = connection.prepareStatement(FIND_IF_CLIENT_ID_EXISTS)) {
+
+            preparedStatement1.setLong(1, Long.parseLong(cardId));
+            preparedStatement2.setLong(1, Long.parseLong(clientId));
+
+            ResultSet rs1 = preparedStatement1.executeQuery();
+            ResultSet rs2 = preparedStatement2.executeQuery();
+
+            String id1 = null, id2 = null;
+            if (rs1.next()) {
+                id1 = rs1.getString("id");
+            }
+            if (id1 == null) {
+                throw new SQLException();
+            }
+            if (rs2.next()) {
+                id2 = rs2.getString("id");
+            }
+            if (id2 == null) {
+                throw new SQLException();
+            }
+        } catch (SQLException e) {
+            throw e;
+        }
     }
 }
