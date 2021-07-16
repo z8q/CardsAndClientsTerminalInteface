@@ -23,51 +23,40 @@ public class ClientHandlerImpl implements ClientHandler {
     private boolean checkLastName(String lastnameInput, StringBuilder builder) {
         boolean success = CHECK_NAME_PATTERN.matcher(lastnameInput).matches();
         if (!success) {
-            builder.append(", Lastname contains invalid characters");
+            builder.append("Lastname contains invalid characters\n");
         }
         return success;
     }
-
-    private MyStatus checkLastName(String lastnameInput) {
-        MyStatus status = new MyStatus();
-        status.setStatus(CHECK_NAME_PATTERN.matcher(lastnameInput).matches());
-        status.setMessage("Lastname contains invalid characters\n");
-        return status;
-    }
-
-    private MyStatus checkFirstName(String firstNameInput) {
-        MyStatus status = new MyStatus();
-        status.setStatus(CHECK_NAME_PATTERN.matcher(firstNameInput).matches());
-        status.setMessage("Firstname contains invalid characters\n");
-        return status;
-    }
-
-    private MyStatus checkMiddleName(String middlenameInput) {
-        MyStatus status = new MyStatus();
-        if(middlenameInput.equals("")) {
-            status.setStatus(true);
-        } else if (CHECK_NAME_PATTERN.matcher(middlenameInput).matches()) {
-            status.setStatus(true);
-        } else {
-            status.setStatus(false);
-            status.setMessage("Middlename contains invalid characters\n");
+    private boolean checkFirstName(String firstnameInput, StringBuilder builder) {
+        boolean success = CHECK_NAME_PATTERN.matcher(firstnameInput).matches();
+        if (!success) {
+            builder.append("Firstname contains invalid characters\n");
         }
-        return status;
+        return success;
     }
-
-    private MyStatus checkBirthDate(String birthDateInput) {
-        MyStatus status = new MyStatus();
+    private boolean checkMiddleName(String middlenameInput, StringBuilder builder) {
+        boolean success = CHECK_NAME_PATTERN.matcher(middlenameInput).matches();
+        if (!success) {
+            if(middlenameInput.equals("")) {
+                success = true;
+            } else  {
+                builder.append("Middlename contains invalid characters\n");
+            }
+        }
+        return success;
+    }
+    private boolean checkBirthDate(String birthDateInput, StringBuilder builder) {
+        boolean success;
         SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy");
         date.setLenient(false);
+
         try {
             Date javaDate = date.parse(birthDateInput);
         } catch (ParseException e) {
-            status.setStatus(false);
-            status.setMessage("Wrong date format");
-            return status;
+            builder.append("Wrong date format\n");
         }
-        status.setStatus(true);
-        return status;
+        success = true;
+        return success;
     }
 
     @Override
@@ -75,19 +64,15 @@ public class ClientHandlerImpl implements ClientHandler {
         MyStatus checkClientStatus = new MyStatus();
         StringBuilder sb = new StringBuilder();
 
-        MyStatus lastname = checkLastName(clientDTO.getLastname());
-        MyStatus firstname = checkFirstName(clientDTO.getFirstname());
-        MyStatus middlename = checkMiddleName(clientDTO.getMiddlename());
-        MyStatus birthdate = checkBirthDate(clientDTO.getDate());
+        boolean lastname = checkLastName(clientDTO.getLastname(), sb);
+        boolean firstname = checkFirstName(clientDTO.getFirstname(), sb);
+        boolean middlename = checkMiddleName(clientDTO.getMiddlename(), sb);
+        boolean birthdate = checkBirthDate(clientDTO.getDate(), sb);
 
 
-        if (!lastname.isStatus() || !firstname.isStatus() ||
-                !middlename.isStatus() || !birthdate.isStatus()) {
-            sb.append(lastname.getMessage());
-            sb.append(firstname.getMessage());
-            sb.append(middlename.getMessage());
-            sb.append(birthdate.getMessage());
-            String cvs = sb.toString().replaceAll("null", "");
+        if (!lastname || !firstname ||
+                !middlename || !birthdate) {
+            String cvs = sb.toString();
 
             checkClientStatus.setStatus(false);
             checkClientStatus.setMessage(cvs);

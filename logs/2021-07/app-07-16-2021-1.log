@@ -45,3 +45,4 @@
 2021-07-16 14:47:27,164 ERROR com.z8q.impl.PostgreCardInputImpl Error while linking card to client
 2021-07-16 14:59:49,777 INFO com.z8q.impl.PostgreCardInputImpl Data was inserted into clients table
 2021-07-16 15:00:18,023 INFO com.z8q.impl.PostgreCardInputImpl Data was inserted into clients table
+2021-07-16 15:26:34,571 INFO com.z8q.impl.PostgreCardInputImpl Data was inserted into clients table
