@@ -24,6 +24,14 @@ public class PostgreCardInputImpl implements CardInput, CardOutput {
     private static final String INSERT_CARD = "INSERT INTO cards " +
             "(pan, form_factor, chip, pincode) VALUES (?, ?, ?, ?);";
 
+    private PostgreCardInputImpl() {
+    }
+
+    public static PostgreCardInputImpl checkCardTableAndGetInstance() {
+        startCreationOfCardTableIfNotExists();
+        return new PostgreCardInputImpl();
+    }
+
     @Override
     public Card getCardById(Long cardIndex) {
         Card card = null;
@@ -90,7 +98,7 @@ public class PostgreCardInputImpl implements CardInput, CardOutput {
     public MyStatus createCardObject(CardDTO cardDTO) {
         MyStatus status = new MyStatus();
 
-        startCreationOfCardTableIfNotExists();
+
 
         FormFactor formFactor = defineFormFactor(cardDTO);
         boolean hasChip = defineChip(cardDTO);
@@ -114,11 +122,13 @@ public class PostgreCardInputImpl implements CardInput, CardOutput {
         return status;
     }
 
-    private void startCreationOfCardTableIfNotExists() {
-        try {
-            PostgreClientInputImpl client = new PostgreClientInputImpl();
-            client.startCreationOfClientTableIfNotExists();
-            CardsAndClientsTablesCreation.createTable(PATH_TO_CREATE_CARDS_TABLE);
+    private static void startCreationOfCardTableIfNotExists() {
+        try (Connection connection = ConnectFactory.getConnection()) {
+            DatabaseMetaData metaData = connection.getMetaData();
+            ResultSet table = metaData.getTables(null, null, "cards", null);
+            if(!table.next()) {
+                CardsAndClientsTablesCreation.createTable(PATH_TO_CREATE_CARDS_TABLE);
+            }
         } catch (SQLException throwables) {
             LOGGER.warn("Table {} already exists",
                     PATH_TO_CREATE_CARDS_TABLE.substring(PATH_TO_CREATE_CARDS_TABLE.lastIndexOf("/")+1));

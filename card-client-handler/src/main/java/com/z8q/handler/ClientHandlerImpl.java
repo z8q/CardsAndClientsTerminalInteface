@@ -28,7 +28,7 @@ public class ClientHandlerImpl implements ClientHandler {
         return success;
     }
 
-    public MyStatus checkLastName(String lastnameInput) {
+    private MyStatus checkLastName(String lastnameInput) {
         MyStatus status = new MyStatus();
         status.setStatus(CHECK_NAME_PATTERN.matcher(lastnameInput).matches());
         status.setMessage("Lastname contains invalid characters\n");
@@ -44,8 +44,14 @@ public class ClientHandlerImpl implements ClientHandler {
 
     private MyStatus checkMiddleName(String middlenameInput) {
         MyStatus status = new MyStatus();
-        status.setStatus(CHECK_NAME_PATTERN.matcher(middlenameInput).matches());
-        status.setMessage("Middlename contains invalid characters\n");
+        if(middlenameInput.equals("")) {
+            status.setStatus(true);
+        } else if (CHECK_NAME_PATTERN.matcher(middlenameInput).matches()) {
+            status.setStatus(true);
+        } else {
+            status.setStatus(false);
+            status.setMessage("Middlename contains invalid characters\n");
+        }
         return status;
     }
 

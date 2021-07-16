@@ -15,8 +15,8 @@ public class Application {
 
 
         //-------------------------Подлежит замене-------------------------------
-        PostgreClientInputImpl clientOutput = new PostgreClientInputImpl();
-        PostgreCardInputImpl cardOutput = new PostgreCardInputImpl();
+        PostgreClientInputImpl clientOutput = PostgreClientInputImpl.checkClientTableAndGetInstance();
+        PostgreCardInputImpl cardOutput = PostgreCardInputImpl.checkCardTableAndGetInstance();
         //-------------------------Подлежит замене-------------------------------
 
 
