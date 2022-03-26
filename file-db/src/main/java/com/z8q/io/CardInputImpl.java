@@ -22,15 +22,15 @@ public class CardInputImpl implements CardInput, CardOutput {
 
     @Override
     public Card getCardById(Long cardIndex) {
-        Scanner sc = null;
+        List<Card> cardArray = new ArrayList<>();
         try {
-            sc = new Scanner(new File(CARDPATH));
+            Scanner sc = new Scanner(new File(CARDPATH));
+            String contentCards = sc.nextLine();
+            Gson gsonCards = new Gson();
+            cardArray = gsonCards.fromJson(contentCards, ArrayList.class);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        String contentCards = sc.nextLine();
-        Gson gsonCards = new Gson();
-        List<Card> cardArray = gsonCards.fromJson(contentCards, ArrayList.class);
         return cardArray.get(cardIndex.intValue());
     }
 
@@ -99,7 +99,6 @@ public class CardInputImpl implements CardInput, CardOutput {
 
     @Override
     public MyStatus createCardObject(CardDTO cardDTO) {
-        MyStatus status = new MyStatus();
         Gson gsonCards = new Gson();
 
         List<Card> cardArray = fromJSONToList(gsonCards);
@@ -116,10 +115,10 @@ public class CardInputImpl implements CardInput, CardOutput {
                 .withHasAChip(hasChip)
                 .withPinCode(cardDTO.getPinCode())
                 .build();
-        // Скрытый вызов метода
-        if(save(card).isStatus()) {
+        MyStatus status = save(card);
+        if(status.isStatus()) {
             status.setStatus(true);
-            System.out.println("Карта сохранена \n");
+            System.out.println("Card was saved \n");
         } else {
             status.setStatus(false);
             status.setMessage("Error on createCardObject stage");
@@ -129,16 +128,14 @@ public class CardInputImpl implements CardInput, CardOutput {
     }
 
     private List<Card> fromJSONToList(Gson gsonCards) {
-        Scanner sc = null;
+        String contentCards = "";
         try {
-            sc = new Scanner(new File(CARDPATH));
+            Scanner sc = new Scanner(new File(CARDPATH));
+            while (sc.hasNext()) {
+                contentCards = sc.nextLine();
+            }
         } catch (FileNotFoundException e) {
-
-            LOGGER.error("Can't create a cardlist while reading JSON");
-        }
-        String contentCards = null;
-        while (sc.hasNext()) {
-            contentCards = sc.nextLine();
+            LOGGER.error("Can't create a cardList while reading JSON");
         }
         return gsonCards.fromJson(contentCards, ArrayList.class);
     }

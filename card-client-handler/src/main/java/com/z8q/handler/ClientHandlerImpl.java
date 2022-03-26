@@ -46,17 +46,14 @@ public class ClientHandlerImpl implements ClientHandler {
         return success;
     }
     private boolean checkBirthDate(String birthDateInput, StringBuilder builder) {
-        boolean success;
         SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy");
         date.setLenient(false);
-
         try {
-            Date javaDate = date.parse(birthDateInput);
+            date.parse(birthDateInput);
         } catch (ParseException e) {
             builder.append("Wrong date format\n");
         }
-        success = true;
-        return success;
+        return true;
     }
 
     @Override
@@ -66,11 +63,11 @@ public class ClientHandlerImpl implements ClientHandler {
 
         boolean lastname = checkLastName(clientDTO.getLastname(), sb);
         boolean firstname = checkFirstName(clientDTO.getFirstname(), sb);
-        boolean middlename = checkMiddleName(clientDTO.getMiddlename(), sb);
+        boolean middleName = checkMiddleName(clientDTO.getMiddlename(), sb);
         boolean birthdate = checkBirthDate(clientDTO.getDate(), sb);
 
 
-        if (!lastname || !firstname || !middlename || !birthdate) {
+        if (!lastname || !firstname || !middleName || !birthdate) {
             String cvs = sb.toString();
             checkClientStatus.setStatus(false);
             checkClientStatus.setMessage(cvs);
