@@ -13,21 +13,19 @@ import com.z8q.postgredb.CardsAndClientsTablesCreation;
 public class Application {
     public static void main(String[] args) {
 
+        //-------------------------You can use postgreSQL to store data-------------------------------
+        PostgreClientInputImpl clientInput = PostgreClientInputImpl.checkClientTableAndGetInstance();
+        PostgreCardInputImpl cardInput = PostgreCardInputImpl.checkCardTableAndGetInstance();
+        //-------------------------Or simple txt file-------------------------------
+//        ClientInputImpl clientInput = new ClientInputImpl();
+//        CardInputImpl cardInput = new CardInputImpl();
 
-        //-------------------------Подлежит замене-------------------------------
-        PostgreClientInputImpl clientOutput = PostgreClientInputImpl.checkClientTableAndGetInstance();
-        PostgreCardInputImpl cardOutput = PostgreCardInputImpl.checkCardTableAndGetInstance();
-        //-------------------------Подлежит замене-------------------------------
+        ClientHandler clientHandler = new ClientHandlerImpl(clientInput);
+        CardHandler cardHandler = new CardHandlerImpl(cardInput);
 
-
-        //---------------------------Не менять-----------------------------------
-        ClientHandler clientHandler = new ClientHandlerImpl(clientOutput);
-        CardHandler cardHandler = new CardHandlerImpl(cardOutput);
-
-        MenuLevels menuLevels = new MenuLevels(clientHandler, cardHandler, cardOutput, clientOutput);
+        MenuLevels menuLevels = new MenuLevels(clientHandler, cardHandler, cardInput, clientInput);
         menuLevels.startMenu();
 
         System.out.println("Program is stopped");
-        //---------------------------Не менять-----------------------------------
     }
 }

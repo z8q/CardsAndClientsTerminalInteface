@@ -22,25 +22,23 @@ public class ClientInputImpl implements ClientInput, ClientOutput {
     private static final String CARDPATH = "file-db/src/main/resources/CardList.txt";
     private static final SimpleDateFormat DATETEMP = new SimpleDateFormat("dd/MM/yyyy");
 
-//    private Provider connectProvider = ProviderFactory.getProvider();
-
     @Override
     public Client getClientById(Long clientIndex) {
-        Scanner sc = null;
+        List<Client> clientArray = new ArrayList<>();
         try {
-            sc = new Scanner(new File(CLIENTPATH));
+            Scanner sc = new Scanner(new File(CLIENTPATH));
+            String contentClients = sc.nextLine();
+            Gson gsonCards = new Gson();
+            clientArray = gsonCards.fromJson(contentClients, ArrayList.class);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        String contentClients = sc.nextLine();
-        Gson gsonCards = new Gson();
-        List<Client> clientArray = gsonCards.fromJson(contentClients, ArrayList.class);
         return clientArray.get(clientIndex.intValue());
     }
 
     @Override
     public List<Client> getAll() {
-        List<Client> printClientList = null;
+        List<Client> printClientList = new ArrayList<>();
         try {
             Scanner sc = new Scanner(new File(CLIENTPATH));
             String content = sc.nextLine();
@@ -146,10 +144,10 @@ public class ClientInputImpl implements ClientInput, ClientOutput {
                 .build();
         if(save(client).isStatus()) {
             status.setStatus(true);
-            System.out.println("Клиент сохранен \n");
+            System.out.println("Client was saved. \n");
         } else {
             status.setStatus(false);
-            status.setMessage("Клиент не сохранен");
+            status.setMessage("Something went wrong. Client wasn't saved. \n");
         }
     }
 
@@ -235,8 +233,7 @@ public class ClientInputImpl implements ClientInput, ClientOutput {
             while (sc.hasNext()) {
                 content = sc.nextLine();
             }
-            Gson gsonClients = new Gson();
-            clientArray = gsonClients.fromJson(content, Client[].class);
+            clientArray = gson.fromJson(content, Client[].class);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

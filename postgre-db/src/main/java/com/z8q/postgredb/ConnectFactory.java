@@ -5,8 +5,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectFactory {
-    public static final String jdbcURL = "jdbc:postgresql://localhost:5432/cards_and_clients";
-    public static final String jdbcUsername = "a19188687";
+    public static final String jdbcURL = "jdbc:postgresql://localhost:5432/cards_clients_01";
+    public static final String jdbcUsername = "sm";
     public static final String jdbcPassword = "";
 
     public static Connection getConnection() throws SQLException {

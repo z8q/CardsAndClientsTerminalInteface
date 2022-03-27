@@ -52,50 +52,6 @@ public class CardHandlerImpl implements CardHandler {
         return success;
     }
 
-//    public MyStatus checkPAN(String cardNumber16DigitsInput) {
-//        MyStatus status = new MyStatus();
-//        if (!cardNumber16DigitsInput.matches("^\\d{16}$")) {
-//            status.setStatus(false);
-//            status.setMessage("Card number contains invalid characters\n");
-//        } else {
-//            status.setStatus(true);
-//        }
-//        return status;
-//    }
-//
-//    public MyStatus checkFormFactor(String realOrVirtualInput){
-//        MyStatus status = new MyStatus();
-//        if(!realOrVirtualInput.equals("1") && !realOrVirtualInput.equals("2")) {
-//            status.setStatus(false);
-//            status.setMessage("Answer to FormFactor question contains invalid characters\n");
-//        } else {
-//            status.setStatus(true);
-//        }
-//        return status;
-//    }
-//
-//    public MyStatus checkChip(String hasAChipInput){
-//        MyStatus status = new MyStatus();
-//        if(!hasAChipInput.equals("yes") && !hasAChipInput.equals("no")) {
-//            status.setStatus(false);
-//            status.setMessage("Answer to chip question contains invalid characters\n");
-//        } else {
-//            status.setStatus(true);
-//        }
-//        return status;
-//    }
-//
-//    public MyStatus checkPin(String pinInput){
-//        MyStatus status = new MyStatus();
-//        if(!pinInput.matches("^\\d{4}$")) {
-//            status.setStatus(false);
-//            status.setMessage("PIN contains invalid characters\n");
-//        } else {
-//            status.setStatus(true);
-//        }
-//        return status;
-//    }
-
     @Override
     public MyStatus checkCardDTO(CardDTO cardDTO){
         MyStatus checkCardStatus = new MyStatus();

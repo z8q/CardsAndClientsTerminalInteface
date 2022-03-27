@@ -18,7 +18,6 @@ public class CardsAndClientsTablesCreation {
         LOGGER.info("Attempt to create table {}", path.substring(path.lastIndexOf("/")+1));
 
         String makeQueryString = readSQLQuery(path);
-
         Connection connection = ConnectFactory.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(makeQueryString);
         preparedStatement.execute();

@@ -64,7 +64,6 @@ public class PostgreCardInputImpl implements CardInput, CardOutput {
 
     @Override
     public List<Card> getAll() {
-        //  надо здесь dto использовать
         List<Card> cardList = new ArrayList<>();
         try (Connection connection = ConnectFactory.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_CARDS)) {
@@ -75,7 +74,6 @@ public class PostgreCardInputImpl implements CardInput, CardOutput {
                 String rsFormFactor = rs.getString("form_factor");
                 boolean rsChip = rs.getBoolean("chip");
                 String rsPin = rs.getString("pincode");
-                //Long rsLinkedClient = rs.getLong("client_id");
 
                 Card card = new Card.Builder()
                         .withId(rsCardId)
@@ -98,8 +96,6 @@ public class PostgreCardInputImpl implements CardInput, CardOutput {
     public MyStatus createCardObject(CardDTO cardDTO) {
         MyStatus status = new MyStatus();
 
-
-
         FormFactor formFactor = defineFormFactor(cardDTO);
         boolean hasChip = defineChip(cardDTO);
 
@@ -114,7 +110,7 @@ public class PostgreCardInputImpl implements CardInput, CardOutput {
 
         MyStatus saveCard = save(card);
         if(saveCard.isStatus()) {
-            System.out.println("Карта сохранена \n");
+            System.out.println("Card was saved \n");
         } else {
             status.setMessage("Error on createCardObject stage");
             LOGGER.error("Error on createCardObject stage");
@@ -129,7 +125,7 @@ public class PostgreCardInputImpl implements CardInput, CardOutput {
             if(!table.next()) {
                 CardsAndClientsTablesCreation.createTable(PATH_TO_CREATE_CARDS_TABLE);
             }
-        } catch (SQLException throwables) {
+        } catch (SQLException e) {
             LOGGER.warn("Table {} already exists",
                     PATH_TO_CREATE_CARDS_TABLE.substring(PATH_TO_CREATE_CARDS_TABLE.lastIndexOf("/")+1));
         }

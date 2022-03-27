@@ -60,12 +60,12 @@ public class Client {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Client client = (Client) o;
-        return Objects.equals(id, client.id) && Objects.equals(lastName, client.lastName) && Objects.equals(firstName, client.firstName) && Objects.equals(middleName, client.middleName) && Objects.equals(birthDate, client.birthDate) && Objects.equals(clientCards, client.clientCards);
+        return Objects.equals(id, client.id) && Objects.equals(lastName, client.lastName) && Objects.equals(firstName, client.firstName) && Objects.equals(middleName, client.middleName) && Objects.equals(birthDate, client.birthDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, lastName, firstName, middleName, birthDate, clientCards);
+        return Objects.hash(id, lastName, firstName, middleName, birthDate);
     }
 
     public static class Builder {
@@ -100,6 +100,19 @@ public class Client {
         }
         public Client build() {
             return newClient;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Builder builder = (Builder) o;
+            return Objects.equals(newClient, builder.newClient);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(newClient);
         }
     }
 }

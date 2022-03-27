@@ -23,7 +23,8 @@ public class PostgreClientInputImpl implements ClientInput, ClientOutput {
     private static final SimpleDateFormat DATETEMP = new SimpleDateFormat("dd/MM/yyyy");
 
     private static final String GET_CLIENT_BY_ID = "SELECT * FROM clients WHERE id = ?;";
-    private static final String GET_ALL_CLIENTS = "SELECT * FROM clients;";
+    private static final String GET_ALL_CLIENTS = "select clients.*, cards.id as card from clients " +
+            "left join cards on clients.id = cards.client_id;";
     private static final String INSERT_CLIENT = "INSERT INTO clients " +
             "(lastname, firstname, middlename, date_of_birth) VALUES (?, ?, ?, ?);";
 
@@ -70,25 +71,36 @@ public class PostgreClientInputImpl implements ClientInput, ClientOutput {
 
     @Override
     public List<Client> getAll() {
+        Map<Client.Builder, List<String>> clients = new HashMap<>();
         List<Client> clientList = new ArrayList<>();
         try (Connection connection = ConnectFactory.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_CLIENTS)) {
 
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                Long rsClientdId = rs.getLong("id");
+                Long rsClientId = rs.getLong("id");
                 String rsLastname = rs.getString("lastname");
                 String rsFirstname = rs.getString("firstname");
-                String middlename = rs.getString("middlename");
+                String middleName = rs.getString("middlename");
                 Date rsDateOfBirth = rs.getDate("date_of_birth");
+                String clientCard = rs.getString("card");
 
-                Client client = new Client.Builder()
-                        .withId(rsClientdId)
+                Client.Builder client = new Client.Builder()
+                        .withId(rsClientId)
                         .withLastName(rsLastname)
                         .withFirstName(rsFirstname)
-                        .withMiddleName(middlename)
-                        .withBirthDate(rsDateOfBirth)
-                        .build();
+                        .withMiddleName(middleName)
+                        .withBirthDate(rsDateOfBirth);
+                if (clients.get(client) != null) {
+                    clients.get(client).add(clientCard);
+                } else {
+                    List<String> temp = new ArrayList<>();
+                    temp.add(clientCard);
+                    clients.put(client, temp);
+                }
+            }
+            for (Map.Entry<Client.Builder, List<String>> element : clients.entrySet()) {
+                Client client = element.getKey().withClientCards(element.getValue()).build();
                 clientList.add(client);
             }
         } catch (SQLException e) {
